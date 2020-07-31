@@ -1,0 +1,18 @@
+{
+  "name": "got",
+  "version": "1.0.0",
+  "description": "got server configurations",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/stphn1117/Got"
+  },
+  "author": "José, Stephanie, Emanuel, Valeria",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
