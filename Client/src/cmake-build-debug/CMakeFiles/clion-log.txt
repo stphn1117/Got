@@ -1,0 +1,6 @@
+/home/valeria/CLion-2019.3.4/clion-2019.3.4/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_TOOLCHAIN_FILE=/home/valeria/Documents/vcpkg/scripts/buildsystems/vcpkg.cmake -G "CodeBlocks - Unix Makefiles" /home/valeria/Documents/Got/Client/src
+-- Found ZLIB: /home/valeria/Documents/vcpkg/installed/x64-linux/debug/lib/libz.a (found version "1.2.11") 
+-- Found ZLIB: /home/valeria/Documents/vcpkg/installed/x64-linux/debug/lib/libz.a (found suitable version "1.2.11", minimum required is "1") 
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/valeria/Documents/Got/Client/src/cmake-build-debug

@@ -1,0 +1,3 @@
+/home/valeria/Documents/Got/Client/src/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/valeria/Documents/Got/Client/src/cmake-build-debug/CMakeFiles/Client.dir
+/home/valeria/Documents/Got/Client/src/cmake-build-debug/CMakeFiles/edit_cache.dir

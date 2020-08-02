@@ -1,0 +1,21 @@
+POST http://localhost:3000/api
+content-type: application/json
+
+{
+    "password":"446b7563ea3f7519ee4d2b5753efb669"
+
+}
+
+###
+
+POST http://localhost:3000/api
+content-type: application/json
+
+{
+    "type":"int",
+    "password":"446b7563ea3f7519ee4d2b5753efb669"
+
+}
+
+
+###
