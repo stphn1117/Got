@@ -6,3 +6,6 @@ Authors:
     Valeria Morales
     José Morales
     Stephanie Villalta
+    
+## Commands
+Init server | node index.js
