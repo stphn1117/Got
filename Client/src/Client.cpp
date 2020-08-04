@@ -1,9 +1,7 @@
 #include "include/Client.h"
 using namespace std;
 
-int main(int argc, char** argv)
-{
-
+void Client::prueba(){
     nlohmann::json j= {
             {"cmd", "set-lives"},
             {"otherval",2}
@@ -19,5 +17,3 @@ int main(int argc, char** argv)
     //cpr::Response r = cpr::Post(cpr::Url{"http://locahost:3000/api"});
 
 }
-
-
