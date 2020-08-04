@@ -1,0 +1,4 @@
+hola esta es una prueba para el algoritmo de compresion de Huffman
+
+hola
+hola
