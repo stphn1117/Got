@@ -1,4 +1,8 @@
+var btree = require('/home/valeria/Documents/Got/Server/src/BinaryTree.js');
+
+var HuffmanTree = new btree.Tree();
 var freqMatrix = [];
+var treeCounter = 1;
 
 //freqMatrix = [[frequency, "char"],
 //              [frequency, "char"]]
@@ -38,6 +42,20 @@ function frecuency(fileString) {
 
 }
 
+function selectLR()
+{
+    var L  = freqMatrix[0];
+    var R = freqMatrix[1];
+    var F = [L[0] + R[0], "N" + treeCounter.toString()];
+
+    HuffmanTree.addLeft(L, F);
+    HuffmanTree.addRight(R);
+    HuffmanTree.print();
+
+}
+
 var file = readTextFile('Server/src/compress.txt');
 frecuency(file);
+selectLR();
+
 
