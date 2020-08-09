@@ -13,6 +13,7 @@
   "author": "José, Stephanie, Emanuel, Valeria",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "mysql": "^2.18.1"
   }
 }
