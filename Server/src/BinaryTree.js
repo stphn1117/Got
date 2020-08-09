@@ -16,83 +16,84 @@ class Tree {
         return this.root === null
     }
 
-    addLeft(node, F) {
+    add(Rnode, Lnode, F, treeCounter) {
         if (this.isEmpty()) {
             this.root = new Node(F);
-            this.root.left = new Node(node)
+            this.root.left = new Node(Lnode);
+            this.root.right = new Node(Rnode);
             return
         } else {
-            var aux = this.root  //raiz actual
-            this.root = new Node(F);
-            this.root.left = aux;
-            return
-        }
-
-    }
-
-    addRight(node) {
-        this.root.right = new Node(node);
-    }
-
-    add(value) {
-        // si el arbol no tiene elementos
-        if (this.isEmpty()) {
-            this.root = new Node(value)
-            return
-        }
-
-        var aux = this.root
-
-        while (aux) {
-            // vamos hacia la izquierda
-            if (value < aux.value) {
-                if (aux.left) {
-                    aux = aux.left
-                } else {
-                    aux.left = new Node(value)
-                    return
-                }
-            } else { // vamos hacia la derecha
-                if (aux.right) {
-                    aux = aux.right
-                } else {
-                    aux.right = new Node(value)
-                    return
-                }
+            if (Lnode[1] == "N" + treeCounter.toString()) {
+                var aux = this.root  //raiz actual
+                this.root = new Node(F);
+                this.root.left = aux;
+                this.root.right = new Node(Rnode)
+                return
+            } else {
+                var aux = this.root  //raiz actual
+                this.root = new Node(F);
+                this.root.left = new Node(Lnode);
+                this.root.right = aux;
+                return
             }
-        }
-    }
 
-    find(value) {
-        if (this.isEmpty()) {
-            return null
         }
 
-        var aux = this.root
-        if (aux.value === value) {
-            return aux
-        }
-
-        while (aux) {
-            if (aux.value === value) {
-                break
-            }
-            if (aux.value < value) {
-                aux = aux.right
-            } else if (aux.value > value) {
-                aux = aux.left
-            }
-        }
-        return aux
     }
 
     print(node = this.root) {
         if (!node) {
             return
+
+        } else if (!node.right && !node.left) {
+            console.log("ROOT: " + node.value);
+            console.log("LEFT: null");
+            console.log("RIGHT: null\n");
+
+        } else if (!node.right) {
+            console.log("ROOT: " + node.value);
+            console.log("LEFT: " + node.left.value);
+            console.log("RIGHT: null\n");
+            this.print(node.left);
+
+        } else if (!node.left) {
+            console.log("ROOT: " + node.value);
+            console.log("LEFT: null");
+            console.log("RIGHT: " + node.right.value + "\n");
+            this.print(node.right);
+
+        } else {
+            console.log("ROOT: " + node.value);
+            console.log("LEFT: " + node.left.value);
+            console.log("RIGHT: " + node.right.value + "\n");
+            this.print(node.left);
+            this.print(node.right);
         }
-        this.print(node.left)
-        console.log(node.value)
-        this.print(node.right)
+    }
+
+    readTree(char, node = this.root, output = [], dir = '') {
+        if (!node) {
+            if (dir == 'left') {
+                output.pop();
+                output.pop();
+
+            } else if (dir == 'right') {
+                output.pop();
+            }
+            return;
+
+        } else if (node.value[1] == char) {
+            console.log("OUTPUT: " + output);
+            return output;
+
+        } else {
+            output.push(0);
+            this.readTree2(char, node.left, output, 'left');
+            output.push(1);
+            this.readTree2(char, node.right, output, 'right');
+        }
     }
 }
 module.exports.Tree = Tree;
+
+
