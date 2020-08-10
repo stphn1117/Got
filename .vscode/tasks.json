@@ -4,9 +4,20 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "echo",
+            "label": "compile got",
             "type": "shell",
-            "command": "echo Hello"
+            "command": "bash tasks/build.sh"
+        },
+        {
+            "label": "launch server",
+            "type": "shell",
+            "command": "node Server/src/index.js" 
+        }
+        ,
+        {
+            "label": "launch DataBase test",
+            "type": "shell",
+            "command": "node Server/src/DataBase.js" 
         }
     ]
 }
