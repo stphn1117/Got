@@ -8,4 +8,4 @@ class Client
 {
 public:
     void prueba();
-}
+};

@@ -1,9 +1,9 @@
-cd Server 
+cd Client
 rm -rf build
 mkdir build
 cd build
-cmake ..
+cmake -DCMAKE_TOOLCHAIN_FILE=/usr/share/vcpkg/scripts/buildsystems/vcpkg.cmake ..
 cd ..
-cmake --build build/ --config Release
+cmake --build build/ --config Release 
 cd ..
-Server/build/server
+Client/build/got
