@@ -9,4 +9,4 @@ set(HEADERS ${INC}/Client.h ${INC}/Interface.h ${INC}/nlohmannJson.hpp)
 
 add_executable(got ${SOURCE_FILES})
 find_package(cpr CONFIG REQUIRED)
-target_link_libraries(gotPRIVATE cpr)
+target_link_libraries(got PRIVATE cpr)
