@@ -1,7 +1,10 @@
 cmake_minimum_required(VERSION 3.13)
-project(Client)
-set(CMAKE_CXX_STANDARD 14)
-
+project(got VERSION 1.0.0 LANGUAGES CXX)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+INCLUDE(GNUInstallDirs)
+set(DEFAULT_BUILD_TYPE "Release")
 
 set(INC src/include)
 set(SOURCE_FILES src/Client.cpp src/Interface.cpp src/main.cpp)
