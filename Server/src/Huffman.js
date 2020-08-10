@@ -5,7 +5,7 @@ var btree = require('/home/valeria/Documents/Got/Server/src/BinaryTree.js');
 
 class Huffman {
 
-    constructor(text){
+    constructor(text) {
         this.text = text;
         this.HuffmanTree = new btree.Tree();
         this.freqMatrix = [];
