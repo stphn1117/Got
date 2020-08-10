@@ -8,14 +8,14 @@ class DataBase {
         database: 'GOT',
         insecureAuth: true
     }
-    static addRepo(){
-
+    static addRepo(name){
+	let protoQuery = "INSERT INTO REPOSITORIO (nombre) VALUES(`${name}`)";	
     }
     static addChanges(){
-
+    
     }
-    static add
-    static addCommit
+    static add(){}
+    static addCommit{}
     static test() {
         let connection = mysql.createConnection(this.#mysqlInfo);
         connection.query("show tables",(err, res)=>{
