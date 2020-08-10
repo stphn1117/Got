@@ -5,8 +5,8 @@ var btree = require('/home/valeria/Documents/Got/Server/src/BinaryTree.js');
 
 class Huffman {
 
-    constructor(file){
-        this.file = file;
+    constructor(text){
+        this.text = text;
         this.HuffmanTree = new btree.Tree();
         this.freqMatrix = [];
         this.nodeCounter = 1;
@@ -76,17 +76,16 @@ class Huffman {
         for (var i in text) {
             this.HuffmanTree.readTree(text[i]);
         }
-        console.log("OUTPUT: " + this.HuffmanTree.output);
+        console.log(this.HuffmanTree.output);
         return this.HuffmanTree.output;
     }
 
     compress() {
-        var text = this.readTextFile(this.file);
-        this.generateMatrix(this.frecuency(text));
+        this.generateMatrix(this.frecuency(this.text));
         this.selectLR();
-        this.generateOutput(text);
+        this.generateOutput(this.text);
     }
 }
 
-var h = new Huffman('Server/src/compress.txt');
+var h = new Huffman("EEDDDGGGGAAAAA");
 h.compress();
