@@ -1,5 +1,5 @@
-var btree = require('/home/valeria/Documents/Got/Server/src/BinaryTree.js');
-var file = readTextFile('Server/src/compress.txt');
+var btree = require('./BinaryTree.js');
+var file = readTextFile('./compress.txt');
 var HuffmanTree = new btree.Tree();
 var textArr = [];
 var freqMatrix = [];
