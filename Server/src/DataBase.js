@@ -8,12 +8,14 @@ class DataBase {
         database: 'GOT',
         insecureAuth: true
     }
-    static addcommit() {
+    static addRepo(){
 
     }
-    static addfile() {
+    static addChanges(){
 
     }
+    static add
+    static addCommit
     static test() {
         let connection = mysql.createConnection(this.#mysqlInfo);
         connection.query("show tables",(err, res)=>{
