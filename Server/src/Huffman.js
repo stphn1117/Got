@@ -1,86 +1,92 @@
 var btree = require('/home/valeria/Documents/Got/Server/src/BinaryTree.js');
-var file = readTextFile('Server/src/compress.txt');
-var HuffmanTree = new btree.Tree();
-var textArr = [];
-var freqMatrix = [];
-var treeCounter = 1;
 
 //freqMatrix = [[frequency, "char"],
 //              [frequency, "char"]]
 
-function readTextFile(file) {
-    var fs = require('fs');
-    var textByLine = fs.readFileSync(file).toString();
-    console.log(textByLine);
-    return textByLine;
-}
+class Huffman {
 
-function frecuency(fileString) {
-    var freq = [];
-    for (var j = 0; j < fileString.length; j++) {
-        var character = fileString.charAt(j);
+    constructor(file){
+        this.file = file;
+        this.HuffmanTree = new btree.Tree();
+        this.freqMatrix = [];
+        this.nodeCounter = 1;
+    }
 
-        if (freq[character]) {
-            freq[character]++;
+    readTextFile(file) {
+        var fs = require('fs');
+        var textByLine = fs.readFileSync(file).toString();
+        console.log(textByLine);
+        return textByLine;
+    }
 
-        } else {
-            freq[character] = 1;
+    frecuency(fileString) {
+        var freq = [];
+        for (var j = 0; j < fileString.length; j++) {
+            var character = fileString.charAt(j);
+
+            if (freq[character]) {
+                freq[character]++;
+
+            } else {
+                freq[character] = 1;
+            }
         }
-    }
-    return freq;
-}
-
-function generateMatrix(freq) {
-    for (var i in freq) {
-        var temp = [];
-        temp.push(freq[i]);
-        temp.push(i);
-        freqMatrix.push(temp);
-        textArr.push(temp);
+        return freq;
     }
 
-    freqMatrix.sort(function (a, b) {
-        return a[0] - b[0]
-    });
+    generateMatrix(freq) {
+        for (var i in freq) {
+            var temp = [];
+            temp.push(freq[i]);
+            temp.push(i);
+            this.freqMatrix.push(temp);
+        }
 
-    console.log(freqMatrix);
-}
-
-function selectLR() {
-
-    while (freqMatrix.length > 1) {
-        var L = freqMatrix[0];
-        var R = freqMatrix[1];
-        var F = [L[0] + R[0], "N" + treeCounter.toString()];
-        treeCounter++;
-
-        HuffmanTree.add(R, L, F, treeCounter);
-
-        freqMatrix.shift();
-        freqMatrix.shift();
-        freqMatrix.unshift(F);
-
-        freqMatrix.sort(function (a, b) {
+        this.freqMatrix.sort(function (a, b) {
             return a[0] - b[0]
         });
-        console.log(freqMatrix);
+
+        console.log(this.freqMatrix);
     }
-    console.log("\n\n");
-    HuffmanTree.print();
+
+    selectLR() {
+
+        while (this.freqMatrix.length > 1) {
+            var L = this.freqMatrix[0];
+            var R = this.freqMatrix[1];
+            var F = [L[0] + R[0], "N" + this.nodeCounter.toString()];
+            this.nodeCounter++;
+
+            this.HuffmanTree.add(R, L, F, this.nodeCounter);
+
+            this.freqMatrix.shift();
+            this.freqMatrix.shift();
+            this.freqMatrix.unshift(F);
+
+            this.freqMatrix.sort(function (a, b) {
+                return a[0] - b[0]
+            });
+            console.log(this.freqMatrix);
+        }
+        console.log("\n\n");
+        this.HuffmanTree.print();
+    }
+
+    generateOutput(text) {
+        for (var i in text) {
+            this.HuffmanTree.readTree(text[i]);
+        }
+        console.log("OUTPUT: " + this.HuffmanTree.output);
+        return this.HuffmanTree.output;
+    }
+
+    compress() {
+        var text = this.readTextFile(this.file);
+        this.generateMatrix(this.frecuency(text));
+        this.selectLR();
+        this.generateOutput(text);
+    }
 }
 
-function generateOutput() {
-    console.log(textArr);
-    var output = HuffmanTree.readTree("G");
-    return output;
-}
-
-function HuffmanCode() {
-    generateMatrix(frecuency(file));
-    selectLR();
-    generateOutput();
-}
-
-HuffmanCode();
-
-
+var h = new Huffman('Server/src/compress.txt');
+h.compress();

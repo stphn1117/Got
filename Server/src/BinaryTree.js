@@ -10,20 +10,21 @@ class Node {
 class Tree {
     constructor() {
         this.root = null
+        this.output = [];
     }
 
     isEmpty() {
         return this.root === null
     }
 
-    add(Rnode, Lnode, F, treeCounter) {
+    add(Rnode, Lnode, F, nodeCounter) {
         if (this.isEmpty()) {
             this.root = new Node(F);
             this.root.left = new Node(Lnode);
             this.root.right = new Node(Rnode);
             return
         } else {
-            if (Lnode[1] == "N" + treeCounter.toString()) {
+            if (Lnode[1] == "N" + nodeCounter.toString()) {
                 var aux = this.root  //raiz actual
                 this.root = new Node(F);
                 this.root.left = aux;
@@ -83,14 +84,16 @@ class Tree {
             return;
 
         } else if (node.value[1] == char) {
-            console.log("OUTPUT: " + output);
-            return output;
+            //console.log("OUTPUT OF " + char + ": " + output);
+            for(var i in output){
+                this.output.push(output[i]);
+            }
 
         } else {
             output.push(0);
-            this.readTree2(char, node.left, output, 'left');
+            this.readTree(char, node.left, output, 'left');
             output.push(1);
-            this.readTree2(char, node.right, output, 'right');
+            this.readTree(char, node.right, output, 'right');
         }
     }
 }
