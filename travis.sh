@@ -48,5 +48,5 @@ sonar-scanner \
   -Dsonar.sources=Client,Server \
   -Dsonar.exclusions=**/nlohmannJson.hpp \
   -Dsonar.host.url=https://sonarcloud.io \
-  -Dsonar.cfamily.build-wrapper-output=./Server/bw-output \
+  -Dsonar.cfamily.build-wrapper-output=./Client/bw-output \
   -Dsonar.login=$SONARLOGIN

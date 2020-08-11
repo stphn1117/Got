@@ -30,6 +30,7 @@ class DataBase {
         conn.query(sql, (err, res)=>{
             
         })
+        conn.end
     }
     addChanges() {
     }
