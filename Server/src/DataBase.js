@@ -23,41 +23,48 @@ class DataBase {
         return this.instance;
     }
 
-    addRepo(name, callback) {
+    insertRepo(name, callback) {
         let sql = `INSERT INTO REPOSITORIO (nombre) VALUES(${name})`;
         let conn = mysql.createConnection(this.mysql);
         conn.query(sql, (err, res)=>{
-            
+            callback(res.insertId);
         })
-        conn.end
+        conn.end()
     }
     addChanges() {
     }
     add() { }
-    addCommit(repositorio, autor, mensaje, hora) {
-        let sql = `
-        
-        INSERT INTO COMMITS (rep_id, autor, mensaje, hora)
-        VALUES ();`;
+    addCommit(repositorio, autor, mensaje, hora, callback) {
+        let sql = `SELECT * FROM REPOSITORIO WHERE nombre=${repositorio}`
+        let conn = mysql.createConnection(this.mysql)
+        function initialQuery(err, result, fields){
+            let sql = `
+            INSERT INTO COMMITS (rep_id, autor, mensaje, hora)
+            VALUES (${result.insertId}, ${autor}, ${mensaje}, ${hora});`;
+            conn.query(sql,function giveCommitId(err, result, fields){
+                
+            })
+            conn.end();
+        }
+        conn.query(sql, initialQuery);
+
     }
     
-    test() {
+    test(callback) {
         let conn = mysql.createConnection(this.mysql)
-        async function callback(err, result, fields){
+        function queryProcess(err, result, fields){
             tables = [];
             result.forEach(x => {tables.push(x.Tables_in_GOT)});
-            await conn.end();
+            conn.end();
         }
-        await conn.query("show tables", callback);
+        conn.query("show tables", queryProcess);
     }
 }
 
 let DB = DataBase.Instance()
-async function start(){
-    let f = await DB.test()
-    return Promise.resolve(f).then(data=>{console.log(data)});
-}
-console.log(start())
+console.log(DB.test((a)=>{
+    console.log(a);
+}))
 
 tablaCodigos = [
     {"codigo":01,"simbolo":"a"},

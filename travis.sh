@@ -36,9 +36,9 @@ rm -rf build
 mkdir build
 cd build
 cmake -DCMAKE_TOOLCHAIN_FILE=$HOME/vcpkg/scripts/buildsystems/vcpkg.cmake ..
+
+#build inside build wrapper
 cd ..
-cmake --build build/ --config Release 
-# Build inside the build-wrapper
 build-wrapper-linux-x86-64 --out-dir bw-output cmake --build build/ --config Release
 cd ..
 
@@ -50,5 +50,5 @@ sonar-scanner \
   -Dsonar.sources=Client \
   -Dsonar.exclusions=**/nlohmannJson.hpp \
   -Dsonar.host.url=https://sonarcloud.io \
-  -Dsonar.cfamily.build-wrapper-output=./Client/bw-output \
+  -Dsonar.cfamily.build-wrapper-output=Client/bw-output \
   -Dsonar.login=$SONARLOGIN
