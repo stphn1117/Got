@@ -24,9 +24,16 @@ unzip -o $HOME/.sonar/build-wrapper-linux-x86.zip -d $HOME/.sonar/ > /dev/null 2
 export PATH=$HOME/.sonar/build-wrapper-linux-x86:$PATH
 
 # Setup the build system
+cd $HOME
 git clone https://github.com/microsoft/vcpkg
-./vcpkg/boostrap-vcpkg.sh
-./vcpkg/vcpkg install cpr
+$HOME/vcpkg/boostrap-vcpkg.sh
+$HOME/vcpkg/vcpkg install cpr
+ls 
+echo "==================================="
+ls .
+echo "==================================="
+ls ..
+echo "==================================="
 echo ${TRAVIS_BUILD_DIR}
 cd ${TRAVIS_BUILD_DIR}
 cd Client
