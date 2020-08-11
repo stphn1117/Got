@@ -38,8 +38,6 @@ cd build
 cmake -DCMAKE_TOOLCHAIN_FILE=$HOME/vcpkg/scripts/buildsystems/vcpkg.cmake ..
 cd ..
 cmake --build build/ --config Release 
-cd ..
-ls -a
 # Build inside the build-wrapper
 build-wrapper-linux-x86-64 --out-dir bw-output cmake --build build/ --config Release
 cd ..

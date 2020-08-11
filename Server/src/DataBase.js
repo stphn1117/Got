@@ -36,23 +36,21 @@ class DataBase {
     }
     add() { }
     addCommit(repositorio, autor, mensaje, hora) {
-        let sql = `INSERT INTO COMMITS (rep_id, autor, mensaje, hora)
-        VALUES (
-            rep_id:int,
-            'autor:varchar',
-            'mensaje:varchar',
-            'hora:time'
-          );`;
-     }
+        let sql = `
+        
+        INSERT INTO COMMITS (rep_id, autor, mensaje, hora)
+        VALUES ();`;
+    }
     
     test(callback) {
         let conn = mysql.createConnection(this.#mysql)
+        let tables;
         conn.query("show tables", (err, result, fields)=>{
-            let tables = []
-            result.forEach(x => {tables.push(x.Tables_in_GOT)})
-            callback(err, tables)
+            tables = [];
+            result.forEach(x => {tables.push(x.Tables_in_GOT)});
+            callback(err, tables);
+            conn.end();
         });
-        conn.end()
     }
 }
 
