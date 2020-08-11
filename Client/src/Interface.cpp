@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string.h>
 #include <fstream>
+#include <sys/stat.h>
 #include "include/Inteface.h"
 #define BUZZ_SIZE 1024
 
@@ -23,20 +24,21 @@ void Interface::getCommand(char **command){
 
 
 void handleFile(char **command){
-    /*
-    read all file
-     std::ifstream infile("pruebas.txt");
-    if(infile.is_open())
-        std::cout << infile.rdbuf(); 
-    */
+
     if(strcmp(command[1], "init") == 0){
+        int status;
+        status = mkdir("../Got", S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+
         ofstream file;
-        file.open("../ProjectUser/.gotignore");
+        file.open("../Got/.gotignore");
+
         file << "gotignore files";
         file.close();
-        printf("\n si esta entrando \n");
-
+        printf("\n new project created \n");
         /*
+
+        read file
+
         std::ifstream file(".gotignore");
         if(file.is_open())
         std::cout << file.rdbuf(); 
