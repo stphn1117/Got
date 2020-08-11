@@ -66,11 +66,11 @@ let DB = DataBase.Instance()
 console.log(DB.insertRepo("hemlo",(a)=>{
     console.log(a);
 }))
-
+/*
 tablaCodigos = [
     {"codigo":01,"simbolo":"a"},
     {"codigo":2123123,"simbolo":"w"},
     {"codigo":2123123,"simbolo":"w"},
     {"codigo":2123123,"simbolo":"w"}
 ]
-codigo=[1,2,3,4,123,10111,122210101,010101];
+codigo=[1,2,3,4,123,10111,122210101,010101];*/
