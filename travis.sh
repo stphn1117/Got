@@ -30,7 +30,7 @@ bash $HOME/vcpkg/boostrap-vcpkg.sh
 bash $HOME/vcpkg/vcpkg install cpr
 ls 
 echo "==================================="
-ls .
+ls ./vcpkg
 echo "==================================="
 ls ..
 echo "==================================="
