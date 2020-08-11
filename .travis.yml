@@ -1,15 +1,5 @@
-dist: trusty
-language: cpp
-addons:
-  apt:
-    sources:
-      - ubuntu-toolchain-r-test
-    packages:
-      - gcc-7
-      - g++-7
+dist: bionic
 script:
   # This script could be run from any CI
-  - export CC=gcc-7
-  - export CXX=g++-7
   - bash travis.sh
   
