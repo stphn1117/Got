@@ -43,8 +43,8 @@ build-wrapper-linux-x86-64 --out-dir bw-output cmake --build build/ --config Rel
 cd ..
 # Run sonar scanner (here, arguments are passed through the command line but most of them can be written in the sonar-project.properties file)
 sonar-scanner \
-  -Dsonar.organization=josfemova \
-  -Dsonar.projectKey=Josfemova_SpiritTemple \
+  -Dsonar.organization=stphn1117 \
+  -Dsonar.projectKey=stphn1117_Got \
   -Dsonar.sources=Client,Server \
   -Dsonar.exclusions=**/nlohmannJson.hpp \
   -Dsonar.host.url=https://sonarcloud.io \
