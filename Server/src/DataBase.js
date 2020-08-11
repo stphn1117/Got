@@ -2,14 +2,13 @@ let mysql = require("mysql");
 let util = require("util");
 
 class DataBase {
-    static #instance;
-    static #inst=false;
-    #mysql;
-    #query_promise;
+    static instance;
+    static inst=false;
+    mysql;
     constructor(){
-        if(DataBase.#inst){throw "too many instances"}
-        DataBase.#inst=true;
-        this.#mysql = {
+        if(DataBase.inst){throw "too many instances"}
+        DataBase.inst=true;
+        this.mysql = {
             host: 'localhost',
             user: 'root',
             password: 'root',
@@ -18,15 +17,15 @@ class DataBase {
         };
     }
     static Instance(){
-        if(!this.#instance){
-            this.#instance = new DataBase();
+        if(!this.instance){
+            this.instance = new DataBase();
         }
-        return this.#instance;
+        return this.instance;
     }
 
     addRepo(name, callback) {
         let sql = `INSERT INTO REPOSITORIO (nombre) VALUES(${name})`;
-        let conn = mysql.createConnection(this.#mysql);
+        let conn = mysql.createConnection(this.mysql);
         conn.query(sql, (err, res)=>{
             
         })
@@ -42,24 +41,23 @@ class DataBase {
         VALUES ();`;
     }
     
-    test(callback) {
-        let conn = mysql.createConnection(this.#mysql)
-        let tables;
-        conn.query("show tables", (err, result, fields)=>{
+    test() {
+        let conn = mysql.createConnection(this.mysql)
+        async function callback(err, result, fields){
             tables = [];
             result.forEach(x => {tables.push(x.Tables_in_GOT)});
-            callback(err, tables);
-            conn.end();
-        });
+            await conn.end();
+        }
+        await conn.query("show tables", callback);
     }
 }
 
 let DB = DataBase.Instance()
-DB.test((err, res)=>{
-    console.log(res);
-});
-
-
+async function start(){
+    let f = await DB.test()
+    return Promise.resolve(f).then(data=>{console.log(data)});
+}
+console.log(start())
 
 tablaCodigos = [
     {"codigo":01,"simbolo":"a"},
