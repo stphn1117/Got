@@ -35,13 +35,12 @@ class DataBase {
     }
     add() { }
     addCommit() { }
+    
     test(callback) {
         let conn = mysql.createConnection(this.#mysql)
         conn.query("show tables", (err, result, fields)=>{
             let tables = []
-            result.forEach(x => {
-                tables.push(x.Tables_in_GOT)
-            })
+            result.forEach(x => {tables.push(x.Tables_in_GOT)})
             callback(err, tables)
         });
         conn.end()
@@ -52,3 +51,13 @@ let DB = DataBase.Instance()
 DB.test((err, res)=>{
     console.log(res);
 });
+
+
+
+tablaCodigos = [
+    {"codigo":01,"simbolo":"a"},
+    {"codigo":2123123,"simbolo":"w"},
+    {"codigo":2123123,"simbolo":"w"},
+    {"codigo":2123123,"simbolo":"w"}
+]
+codigo=[1,2,3,4,123,10111,122210101,010101];
