@@ -35,7 +35,15 @@ class DataBase {
     addChanges() {
     }
     add() { }
-    addCommit() { }
+    addCommit(repositorio, autor, mensaje, hora) {
+        let sql = `INSERT INTO COMMITS (rep_id, autor, mensaje, hora)
+        VALUES (
+            rep_id:int,
+            'autor:varchar',
+            'mensaje:varchar',
+            'hora:time'
+          );`;
+     }
     
     test(callback) {
         let conn = mysql.createConnection(this.#mysql)

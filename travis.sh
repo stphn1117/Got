@@ -30,7 +30,7 @@ cd vcpkg
 ./vcpkg install cpr
 echo ${TRAVIS_BUILD_DIR}
 cd ${TRAVIS_BUILD_DIR}
-
+ls -a
 cd Client
 rm -rf build
 mkdir build
@@ -39,15 +39,17 @@ cmake -DCMAKE_TOOLCHAIN_FILE=$HOME/vcpkg/scripts/buildsystems/vcpkg.cmake ..
 cd ..
 cmake --build build/ --config Release 
 cd ..
-
+ls -a
 # Build inside the build-wrapper
 build-wrapper-linux-x86-64 --out-dir bw-output cmake --build build/ --config Release
 cd ..
+
+ls -a
 # Run sonar scanner (here, arguments are passed through the command line but most of them can be written in the sonar-project.properties file)
-sonar-scanner \
+sonar-scanner -X \
   -Dsonar.organization=stphn1117 \
   -Dsonar.projectKey=stphn1117_Got \
-  -Dsonar.sources=Client,Server \
+  -Dsonar.sources=Client,Server/src \
   -Dsonar.exclusions=**/nlohmannJson.hpp \
   -Dsonar.host.url=https://sonarcloud.io \
   -Dsonar.cfamily.build-wrapper-output=./Client/bw-output \
