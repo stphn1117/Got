@@ -7,11 +7,10 @@ int main(int argc, char* argv[]){
     for (int i = 0; i < argc; ++i) {
         if(i == 4){
             printf(" \n too much arguments, write help to get more information \n");
-        }else{
-             input.getCommand(argv);
-        
         }
     }
+
+    input.getCommand(argv);
 
 
     /*

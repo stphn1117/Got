@@ -23,8 +23,6 @@ void Interface::getCommand(char **command){
 
 
 void handleFile(char **command){
-    
-
     /*
     read all file
      std::ifstream infile("pruebas.txt");
@@ -32,16 +30,18 @@ void handleFile(char **command){
         std::cout << infile.rdbuf(); 
     */
     if(strcmp(command[1], "init") == 0){
+        ofstream file;
+        file.open("../ProjectUser/.gotignore");
+        file << "gotignore files";
+        file.close();
+        printf("\n si esta entrando \n");
 
-/*
-    ofstream file;
-    file.open(".gotignore");
-    file << "gotignore files";
-    file.close();
-    std::ifstream file(".gotignore");
-    if(file.is_open())
-    std::cout << file.rdbuf(); 
-*/
+        /*
+        std::ifstream file(".gotignore");
+        if(file.is_open())
+        std::cout << file.rdbuf(); 
+        */
+
     }
         
 }

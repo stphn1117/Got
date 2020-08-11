@@ -1,4 +1,5 @@
 #include "include/Client.h"
+#include <iostream>
 using namespace std;
 
 void Client::sendFiles(){
