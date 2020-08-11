@@ -1,4 +1,4 @@
 sudo: false
 
 script:
-	- bash travis.sh
+- bash travis.sh
