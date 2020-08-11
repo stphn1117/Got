@@ -26,8 +26,8 @@ export PATH=$HOME/.sonar/build-wrapper-linux-x86:$PATH
 # Setup the build system
 cd $HOME
 git clone https://github.com/microsoft/vcpkg
-$HOME/vcpkg/boostrap-vcpkg.sh
-$HOME/vcpkg/vcpkg install cpr
+bash $HOME/vcpkg/boostrap-vcpkg.sh
+bash $HOME/vcpkg/vcpkg install cpr
 ls 
 echo "==================================="
 ls .
