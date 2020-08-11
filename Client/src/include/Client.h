@@ -7,5 +7,5 @@ using namespace std;
 class Client
 {
 public:
-    void prueba();
+    void sendFiles();
 };

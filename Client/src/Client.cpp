@@ -1,16 +1,20 @@
 #include "include/Client.h"
 using namespace std;
 
-void Client::prueba(){
-    nlohmann::json j= {
-            {"cmd", "set-lives"},
-            {"otherval",2}
+void Client::sendFiles(){
+
+    nlohmann::json output ={
+        {"command", "input"},
+        {"files", "nameFiles"},
+        {"messajeCommit", "mymessage"},
+        {"commit", "SpecifyCommit"}
     };
+
 
     auto res = cpr::Post(
             cpr::Url{"http://localhost:3000/api"},
             cpr::Header{{"Content-Type", "application/json"}},
-            cpr::Body{j.dump()}
+            cpr::Body{output.dump()}
             );
 
     //cpr::Response r = cpr::Get(cpr::Url{"http://localhost:3000"});
