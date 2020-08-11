@@ -1,5 +1,6 @@
+USE GOT;
 INSERT INTO REPOSITORIO (nombre)
-VALUES ('nombre:varchar');
+VALUES ('repo2');
 
 
 INSERT INTO COMMITS (rep_id, autor, mensaje, hora)

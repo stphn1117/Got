@@ -15,8 +15,7 @@ export SONAR_SCANNER_HOME=$HOME/.sonar/sonar-scanner-$SONAR_SCANNER_VERSION-linu
 curl -sSLo $HOME/.sonar/sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-$SONAR_SCANNER_VERSION-linux.zip > /dev/null 2>&1
 unzip -o $HOME/.sonar/sonar-scanner.zip -d $HOME/.sonar/ > /dev/null 2>&1
 export PATH=$SONAR_SCANNER_HOME/bin:$PATH
-
-rt SONAR_SCANNER_OPTS="-server"
+export SONAR_SCANNER_OPTS="-server"
 
 # download build-wrapper
 curl -sSLo $HOME/.sonar/build-wrapper-linux-x86.zip https://sonarcloud.io/static/cpp/build-wrapper-linux-x86.zip > /dev/null 2>&1
@@ -26,27 +25,30 @@ export PATH=$HOME/.sonar/build-wrapper-linux-x86:$PATH
 # Setup the build system
 cd $HOME
 git clone https://github.com/microsoft/vcpkg
-./vcpkg/boostrap-vcpkg.sh
-./vcpkg/vcpkg install cpr
-
+cd vcpkg
+./bootstrap-vcpkg.sh
+./vcpkg install cpr
+echo ${TRAVIS_BUILD_DIR}
+cd ${TRAVIS_BUILD_DIR}
+ls -a
 cd Client
 rm -rf build
 mkdir build
 cd build
 cmake -DCMAKE_TOOLCHAIN_FILE=$HOME/vcpkg/scripts/buildsystems/vcpkg.cmake ..
-cd ..
-cmake --build build/ --config Release 
-cd ..
 
-# Build inside the build-wrapper
+#build inside build wrapper
+cd ..
 build-wrapper-linux-x86-64 --out-dir bw-output cmake --build build/ --config Release
 cd ..
+
+ls -a
 # Run sonar scanner (here, arguments are passed through the command line but most of them can be written in the sonar-project.properties file)
 sonar-scanner \
   -Dsonar.organization=stphn1117 \
   -Dsonar.projectKey=stphn1117_Got \
-  -Dsonar.sources=Client,Server \
+  -Dsonar.sources=Client,Server/src \
   -Dsonar.exclusions=**/nlohmannJson.hpp \
   -Dsonar.host.url=https://sonarcloud.io \
-  -Dsonar.cfamily.build-wrapper-output=./Server/bw-output \
+  -Dsonar.cfamily.build-wrapper-output=Client/bw-output \
   -Dsonar.login=$SONARLOGIN
