@@ -1,4 +1,5 @@
 sudo: false
 
 script:
-- bash travis.sh
+  # This script could be run from any CI
+  - bash travis.sh
