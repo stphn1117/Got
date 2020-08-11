@@ -24,10 +24,11 @@ class DataBase {
     }
 
     insertRepo(name, callback) {
-        let sql = `INSERT INTO REPOSITORIO (nombre) VALUES(${name})`;
+        let sql = `INSERT INTO REPOSITORIO (nombre) VALUES ("${name}")`;
+        console.log(sql)
         let conn = mysql.createConnection(this.mysql);
-        conn.query(sql, (err, res)=>{
-            callback(res.insertId);
+        conn.query(sql, (err, result, fields)=>{
+            callback(result.InsertId);
         })
         conn.end()
     }
@@ -42,7 +43,7 @@ class DataBase {
             INSERT INTO COMMITS (rep_id, autor, mensaje, hora)
             VALUES (${result.insertId}, ${autor}, ${mensaje}, ${hora});`;
             conn.query(sql,function giveCommitId(err, result, fields){
-                
+
             })
             conn.end();
         }
@@ -62,7 +63,7 @@ class DataBase {
 }
 
 let DB = DataBase.Instance()
-console.log(DB.test((a)=>{
+console.log(DB.insertRepo("hemlo",(a)=>{
     console.log(a);
 }))
 

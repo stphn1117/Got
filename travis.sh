@@ -47,7 +47,7 @@ ls -a
 sonar-scanner \
   -Dsonar.organization=stphn1117 \
   -Dsonar.projectKey=stphn1117_Got \
-  -Dsonar.sources=Client \
+  -Dsonar.sources=Client,Server/src \
   -Dsonar.exclusions=**/nlohmannJson.hpp \
   -Dsonar.host.url=https://sonarcloud.io \
   -Dsonar.cfamily.build-wrapper-output=Client/bw-output \
