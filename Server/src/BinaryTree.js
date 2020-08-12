@@ -10,7 +10,8 @@ class Node {
 class Tree {
     constructor() {
         this.root = null
-        this.output = [];
+        this.output = "";
+        this.codes = { "codes": [] };
     }
 
     isEmpty() {
@@ -84,16 +85,33 @@ class Tree {
             return;
 
         } else if (node.value[1] == char) {
-            //console.log("OUTPUT OF " + char + ": " + output);
-            for(var i in output){
-                this.output.push(output[i]);
+            var code = "";
+            for (var i in output) {
+                this.output += output[i].toString();
+                code += output[i].toString();
             }
+            this.saveCode(char, code);
+
 
         } else {
             output.push(0);
             this.readTree(char, node.left, output, 'left');
             output.push(1);
             this.readTree(char, node.right, output, 'right');
+        }
+    }
+
+    saveCode(char, output) {
+        var exist = false;
+        for (var i in this.codes["codes"]) {
+            if (this.codes["codes"][i]["char"] == char) {
+                exist = true;
+            }
+        }
+        console.log(char, output, exist);
+
+        if (exist == false) {
+            this.codes["codes"].push({ "code": output, "char": char });
         }
     }
 }

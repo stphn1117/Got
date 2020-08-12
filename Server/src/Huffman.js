@@ -84,6 +84,7 @@ class Huffman {
         this.generateMatrix(this.frecuency(this.text));
         this.selectLR();
         this.generateOutput(this.text);
+        console.log(this.HuffmanTree.codes);
     }
 }
 
