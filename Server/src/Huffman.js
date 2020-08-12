@@ -105,7 +105,8 @@ class Huffman {
     decompress(textCode, charCodes) { 
         this.generateTreeByCode(charCodes);
         this.HuffmanTree.print();
-
+        var text = this.HuffmanTree.readTreeByCode(textCode);
+        console.log(text);
     }
 }
 

@@ -43,34 +43,34 @@ class Tree {
 
     }
 
-    addByCode(charCode, char, nodeCounter){
+    addByCode(charCode, char, nodeCounter) {
         if (this.isEmpty()) {
             this.root = new Node("N" + nodeCounter);
         }
         var position = this.root;
 
-        for(var i in charCode){
-            if(charCode[i] == 1){
+        for (var i in charCode) {
+            if (charCode[i] == 1) {
 
-                if(!position.right && i == charCode.length-1){
+                if (!position.right && i == charCode.length - 1) {
                     position.right = new Node(char);
                     return;
-                }else if(!position.right){
+                } else if (!position.right) {
                     position.right = new Node("N" + nodeCounter);
                     position = position.right;
-                }else{
+                } else {
                     position = position.right;
                 }
-                
-            }else if(charCode[i] == 0){
 
-                if(!position.left && i == charCode.length-1){
+            } else if (charCode[i] == 0) {
+
+                if (!position.left && i == charCode.length - 1) {
                     position.left = new Node(char);
                     return;
-                }else if(!position.left){
+                } else if (!position.left) {
                     position.left = new Node("N" + nodeCounter);
                     position = position.left;
-                }else{
+                } else {
                     position = position.left;
                 }
             }
@@ -128,7 +128,6 @@ class Tree {
             }
             this.saveCode(char, code);
 
-
         } else {
             output.push(0);
             this.readTree(char, node.left, output, 'left');
@@ -137,8 +136,31 @@ class Tree {
         }
     }
 
-    readTreeByCode(textCode){
-        
+    readTreeByCode(textCode, node = this.root) {
+        var text = "";
+        for (var i in textCode) {
+            console.log(textCode[i], node);
+            if (!node) {
+
+            } else if (textCode[i] == "1") {
+                if (!node.right.right) {
+                    text += node.right.value;
+                    node = this.root;
+                    console.log("end");
+                } else {
+                    node = node.right;
+                }
+            } else if (textCode[i] == "0") {
+                if (!node.left.left) {
+                    text += node.left.value;
+                    node = this.root;
+                    console.log("end");
+
+                } else {
+                    node = node.left;
+                }
+            }
+        } return text;
     }
 
     saveCode(char, output) {
