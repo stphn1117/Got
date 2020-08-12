@@ -5,8 +5,8 @@ var btree = require('/home/valeria/Documents/Got/Server/src/BinaryTree.js');
 
 class Huffman {
 
-    constructor(text) {
-        this.text = text;
+    constructor() {
+        this.text = "";
         this.HuffmanTree = new btree.Tree();
         this.freqMatrix = [];
         this.nodeCounter = 1;
@@ -57,7 +57,7 @@ class Huffman {
             var F = [L[0] + R[0], "N" + this.nodeCounter.toString()];
             this.nodeCounter++;
 
-            this.HuffmanTree.add(R, L, F, this.nodeCounter);
+            this.HuffmanTree.addByText(R, L, F, this.nodeCounter);
 
             this.freqMatrix.shift();
             this.freqMatrix.shift();
@@ -74,19 +74,47 @@ class Huffman {
 
     generateOutput(text) {
         for (var i in text) {
-            this.HuffmanTree.readTree(text[i]);
+            this.HuffmanTree.readTreeByText(text[i]);
         }
         console.log(this.HuffmanTree.output);
         return this.HuffmanTree.output;
     }
 
-    compress() {
+    generateTreeByCode(charCodes){
+        
+        charCodes["codes"].sort(function(a, b){
+            return a.code - b.code;
+        });
+
+        console.log(charCodes);
+        for(var i in charCodes["codes"]){
+            this.HuffmanTree.addByCode(charCodes["codes"][i]["code"], charCodes["codes"][i]["char"], this.nodeCounter);
+            this.nodeCounter++;
+        }
+    }
+
+    compress(text) {
+        this.text = text;
         this.generateMatrix(this.frecuency(this.text));
         this.selectLR();
         this.generateOutput(this.text);
         console.log(this.HuffmanTree.codes);
+        this.HuffmanTree = new btree.Tree();
+    }
+
+    decompress(textCode, charCodes) { 
+        this.generateTreeByCode(charCodes);
+        this.HuffmanTree.print();
+
     }
 }
 
-var h = new Huffman("EEDDDGGGGAAAAA");
-h.compress();
+var h = new Huffman();
+//h.compress("EEDDDGGGGAAAAA");
+var charCodes = { codes: 
+    [ { code: '110', char: 'E' },
+      { code: '111', char: 'D' },
+      { code: '10', char: 'G' },
+      { code: '0', char: 'A' } ] };
+
+h.decompress("1101101111111111010101000000", charCodes);

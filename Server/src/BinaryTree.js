@@ -11,14 +11,14 @@ class Tree {
     constructor() {
         this.root = null
         this.output = "";
-        this.codes = { "codes": [] };
+        this.charCodes = { "codes": [] };
     }
 
     isEmpty() {
         return this.root === null
     }
 
-    add(Rnode, Lnode, F, nodeCounter) {
+    addByText(Rnode, Lnode, F, nodeCounter) {
         if (this.isEmpty()) {
             this.root = new Node(F);
             this.root.left = new Node(Lnode);
@@ -41,6 +41,42 @@ class Tree {
 
         }
 
+    }
+
+    addByCode(charCode, char, nodeCounter){
+        if (this.isEmpty()) {
+            this.root = new Node("N" + nodeCounter);
+        }
+        var position = this.root;
+
+        for(var i in charCode){
+            if(charCode[i] == 1){
+
+                if(!position.right && i == charCode.length-1){
+                    position.right = new Node(char);
+                    return;
+                }else if(!position.right){
+                    position.right = new Node("N" + nodeCounter);
+                    position = position.right;
+                }else{
+                    position = position.right;
+                }
+                
+            }else if(charCode[i] == 0){
+
+                if(!position.left && i == charCode.length-1){
+                    position.left = new Node(char);
+                    return;
+                }else if(!position.left){
+                    position.left = new Node("N" + nodeCounter);
+                    position = position.left;
+                }else{
+                    position = position.left;
+                }
+            }
+        }
+
+        position = new Node(char);
     }
 
     print(node = this.root) {
@@ -73,7 +109,7 @@ class Tree {
         }
     }
 
-    readTree(char, node = this.root, output = [], dir = '') {
+    readTreeByText(char, node = this.root, output = [], dir = '') {
         if (!node) {
             if (dir == 'left') {
                 output.pop();
@@ -101,17 +137,20 @@ class Tree {
         }
     }
 
+    readTreeByCode(textCode){
+        
+    }
+
     saveCode(char, output) {
         var exist = false;
         for (var i in this.codes["codes"]) {
-            if (this.codes["codes"][i]["char"] == char) {
+            if (this.charCodes["codes"][i]["char"] == char) {
                 exist = true;
             }
         }
-        console.log(char, output, exist);
 
         if (exist == false) {
-            this.codes["codes"].push({ "code": output, "char": char });
+            this.charCodes["codes"].push({ "code": output, "char": char });
         }
     }
 }
