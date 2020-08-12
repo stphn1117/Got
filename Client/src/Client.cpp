@@ -2,7 +2,7 @@
 #include <iostream>
 using namespace std;
 
-void Client::sendFiles(){
+void Client::send(char **command, int *files, string commit, string specifyCommit){
 
     nlohmann::json output ={
         {"command", "input"},
@@ -21,4 +21,8 @@ void Client::sendFiles(){
     //cpr::Response r = cpr::Get(cpr::Url{"http://localhost:3000"});
     //cpr::Response r = cpr::Post(cpr::Url{"http://locahost:3000/api"});
 
+}
+
+void Client::get(int *files, string specifyCommand,int Time){
+    //getting files and info
 }

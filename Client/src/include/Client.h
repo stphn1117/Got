@@ -7,5 +7,6 @@ using namespace std;
 class Client
 {
 public:
-    void sendFiles();
+    void get(int files[], string specifyCommit, int Time);
+    void send(char * theCom[], int files[], string commit, string specifyCommit);
 };
