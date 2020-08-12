@@ -10,14 +10,15 @@ class Node {
 class Tree {
     constructor() {
         this.root = null
-        this.output = [];
+        this.output = "";
+        this.charCodes = { "codes": [] };
     }
 
     isEmpty() {
         return this.root === null
     }
 
-    add(Rnode, Lnode, F, nodeCounter) {
+    addByText(Rnode, Lnode, F, nodeCounter) {
         if (this.isEmpty()) {
             this.root = new Node(F);
             this.root.left = new Node(Lnode);
@@ -40,6 +41,42 @@ class Tree {
 
         }
 
+    }
+
+    addByCode(charCode, char, nodeCounter) {
+        if (this.isEmpty()) {
+            this.root = new Node("N" + nodeCounter);
+        }
+        var position = this.root;
+
+        for (var i in charCode) {
+            if (charCode[i] == 1) {
+
+                if (!position.right && i == charCode.length - 1) {
+                    position.right = new Node(char);
+                    return;
+                } else if (!position.right) {
+                    position.right = new Node("N" + nodeCounter);
+                    position = position.right;
+                } else {
+                    position = position.right;
+                }
+
+            } else if (charCode[i] == 0) {
+
+                if (!position.left && i == charCode.length - 1) {
+                    position.left = new Node(char);
+                    return;
+                } else if (!position.left) {
+                    position.left = new Node("N" + nodeCounter);
+                    position = position.left;
+                } else {
+                    position = position.left;
+                }
+            }
+        }
+
+        position = new Node(char);
     }
 
     print(node = this.root) {
@@ -72,7 +109,7 @@ class Tree {
         }
     }
 
-    readTree(char, node = this.root, output = [], dir = '') {
+    readTreeByText(char, node = this.root, output = [], dir = '') {
         if (!node) {
             if (dir == 'left') {
                 output.pop();
@@ -84,16 +121,58 @@ class Tree {
             return;
 
         } else if (node.value[1] == char) {
-            //console.log("OUTPUT OF " + char + ": " + output);
-            for(var i in output){
-                this.output.push(output[i]);
+            var code = "";
+            for (var i in output) {
+                this.output += output[i].toString();
+                code += output[i].toString();
             }
+            this.saveCode(char, code);
 
         } else {
             output.push(0);
             this.readTree(char, node.left, output, 'left');
             output.push(1);
             this.readTree(char, node.right, output, 'right');
+        }
+    }
+
+    readTreeByCode(textCode, node = this.root) {
+        var text = "";
+        for (var i in textCode) {
+            console.log(textCode[i], node);
+            if (!node) {
+
+            } else if (textCode[i] == "1") {
+                if (!node.right.right) {
+                    text += node.right.value;
+                    node = this.root;
+                    console.log("end");
+                } else {
+                    node = node.right;
+                }
+            } else if (textCode[i] == "0") {
+                if (!node.left.left) {
+                    text += node.left.value;
+                    node = this.root;
+                    console.log("end");
+
+                } else {
+                    node = node.left;
+                }
+            }
+        } return text;
+    }
+
+    saveCode(char, output) {
+        var exist = false;
+        for (var i in this.codes["codes"]) {
+            if (this.charCodes["codes"][i]["char"] == char) {
+                exist = true;
+            }
+        }
+
+        if (exist == false) {
+            this.charCodes["codes"].push({ "code": output, "char": char });
         }
     }
 }
