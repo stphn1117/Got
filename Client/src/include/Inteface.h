@@ -8,10 +8,10 @@
 class Interface{
     public:
     // user
-        void getCommand(char * theCom[]);
+        void getCommand(int count, char * theCom[]);
         void sendComand();
     //server
-        void toClient(char * theCom[]);
+        void toClient(int count, char * theCom[]);
         void fromClient();
         
         void createFile();

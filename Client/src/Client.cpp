@@ -1,9 +1,18 @@
 #include "include/Client.h"
 #include <iostream>
 using namespace std;
+using json = nlohmann::json;
 
-void Client::send(char **command, int *files, string commit, string specifyCommit){
+void Client::send(vector<string> command, vector<string> files, string commit, string specifyCommit){
 
+
+json output;
+output["command"] = command;
+output["files"] = files;
+output["messajeCommit"] = commit;
+output["commit"]= specifyCommit;
+
+/*
     nlohmann::json output ={
         {"command", "input"},
         {"files", "nameFiles"},
@@ -11,7 +20,7 @@ void Client::send(char **command, int *files, string commit, string specifyCommi
         {"commit", "SpecifyCommit"}
     };
 
-
+*/
     auto res = cpr::Post(
             cpr::Url{"http://localhost:3000/api"},
             cpr::Header{{"Content-Type", "application/json"}},

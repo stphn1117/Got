@@ -8,5 +8,5 @@ class Client
 {
 public:
     void get(int files[], string specifyCommit, int Time);
-    void send(char * theCom[], int files[], string commit, string specifyCommit);
+    void send(vector<string> theCom, vector<string> files, string commit, string specifyCommit);
 };

@@ -12,7 +12,7 @@ int main(int argc, char* argv[]){
         }
     }
 
-    input.getCommand(argv);
+    input.getCommand(argc, argv);
 
 
     /*

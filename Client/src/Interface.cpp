@@ -12,7 +12,7 @@
 using namespace std;
 int dirFile;
 
-void Interface::getCommand(char **command){
+void Interface::getCommand(int count, char **command){
     if(strcmp(command[1], "help") == 0) {
         printf(" instructions:\n\n init <name>\n\n add [-A] [name]\n\n commit <message>\n\n reset <file>\n\n sync<file>\n\n");
     }else if(strcmp(command[1], "init") == 0){
@@ -22,7 +22,7 @@ void Interface::getCommand(char **command){
     }else if(strcmp(command[1], "rollback") == 0 || strcmp(command[1], "reset") == 0){
         //back();
     }else if(strcmp(command[1], "test") == 0){
-        toClient(command);
+        toClient(count, command);
     }else{
         //ask to server
     }
@@ -50,8 +50,23 @@ void Interface::handleCommitFile(){
 }
 
 
-void Interface::toClient(char **command){
+void Interface::toClient(int count, char **commands){
     Client sending;
-    int files[] = {'t', 'r', 'u', 'e'};
+    //char *filess[4] = {"file1", "file2", "file3"};
+    vector<string> files; 
+    vector<string> command;
+    //std::vector<char> data(command, command + command.zece)
+    // Initialize vector with strings using push_back 
+    // command
+    for (int i = 0; i < count; i++){ 
+        cout << commands[i] << "\n";
+        command.push_back(commands[i]);
+    }
+
+
+    files.push_back("file1"); 
+    files.push_back("file2");
+
+
     sending.send(command, files, "mi commit", " commit 5, especificación" );
 }
