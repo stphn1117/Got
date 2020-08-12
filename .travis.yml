@@ -1,0 +1,5 @@
+dist: bionic
+script:
+  # This script could be run from any CI
+  - bash travis.sh
+  
