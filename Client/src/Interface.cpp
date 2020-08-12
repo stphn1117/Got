@@ -2,6 +2,7 @@
 #include <string.h>
 #include <fstream>
 #include <sys/stat.h>
+#include <dirent.h>
 #include "include/Inteface.h"
 #include "include/Client.h"
 //#include "include/dtl/dtl.hpp"
@@ -52,21 +53,26 @@ void Interface::handleCommitFile(){
 
 void Interface::toClient(int count, char **commands){
     Client sending;
-    //char *filess[4] = {"file1", "file2", "file3"};
     vector<string> files; 
     vector<string> command;
-    //std::vector<char> data(command, command + command.zece)
-    // Initialize vector with strings using push_back 
-    // command
     for (int i = 0; i < count; i++){ 
         cout << commands[i] << "\n";
         command.push_back(commands[i]);
     }
+    
 
-
-    files.push_back("file1"); 
-    files.push_back("file2");
-
+    DIR *dir;
+    struct dirent *ent;
+    if ((dir = opendir ("../Got")) != NULL) {
+    //select files and directories within directory 
+    while ((ent = readdir (dir)) != NULL) {
+        files.push_back(ent->d_name);
+    }
+    closedir (dir);
+    } else {
+    //could not open directory
+    perror ("");
+    }
 
     sending.send(command, files, "mi commit", " commit 5, especificación" );
 }
