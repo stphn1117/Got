@@ -29,28 +29,24 @@ class DataBase {
         let conn = mysql.createConnection(this.mysql);
         conn.query(sql, (err, result, fields)=>{
             callback(result.InsertId);
+			conn.end();
         })
-        conn.end()
     }
-    addChanges() {
-    }
-    add() { }
-    addCommit(repositorio, autor, mensaje, hora, callback) {
-        let sql = `SELECT * FROM REPOSITORIO WHERE nombre=${repositorio}`
-        let conn = mysql.createConnection(this.mysql)
-        function initialQuery(err, result, fields){
-            let sql = `
+    addCommit(repositorioId, autor, mensaje, hora,addFiles, changes, callback) {
+        let sql = `
             INSERT INTO COMMITS (rep_id, autor, mensaje, hora)
-            VALUES (${result.insertId}, ${autor}, ${mensaje}, ${hora});`;
-            conn.query(sql,function giveCommitId(err, result, fields){
+            VALUES (${repositorioId}, ${autor}, ${mensaje}, ${hora});`;
 
-            })
-            conn.end();
-        }
-        conn.query(sql, initialQuery);
-
+		let conn = mysql.createConnection(this.mysql)
+        conn.query(sql, (err, result, fields)=>{
+			callback(result.insertId);
+			conn.end();
+		});
     }
-    
+	getFile(fileId, callback){
+		let sql = `SELECT * FROM ARCHIVO`;
+		
+    }
     test(callback) {
         let conn = mysql.createConnection(this.mysql)
         function queryProcess(err, result, fields){
@@ -66,6 +62,13 @@ let DB = DataBase.Instance()
 console.log(DB.insertRepo("hemlo",(a)=>{
     console.log(a);
 }))
+//select archivo test
+
+console.log(DB.getFile(1,(file)=>{
+	console.log(file);
+}));
+
+
 /*
 tablaCodigos = [
     {"codigo":01,"simbolo":"a"},
