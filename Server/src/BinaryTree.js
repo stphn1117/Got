@@ -63,8 +63,8 @@ class Tree {
             this.nodes.push(this.root);
             return
         }
+        var node = new Node(F);
         for (var i in this.nodes) {
-            var node = new Node(F);
             for (var j in this.nodes) {
                 if ((R[1] == this.nodes[i].value[1] && L[1] == this.nodes[j].value[1]) || (L[1] == this.nodes[i].value[1] && R[1] == this.nodes[j].value[1])) {
                     node.right = this.nodes[i];
@@ -95,7 +95,6 @@ class Tree {
                 return
             }
         }
-        var node = new Node(F);
         node.left = new Node(L);
         node.right = new Node(R);
         node.left.prev = node;
