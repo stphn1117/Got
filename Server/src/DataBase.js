@@ -2,12 +2,14 @@ const mysql2 = require("mysql2/promise");
 const util = require("util");
 const md5 = require("md5");
 const diff = require("diff");
-const Huffman = require("./Huffman");
+const compression = require("./Huffman");
+const { REPL_MODE_STRICT } = require("repl");
 
 class DataBase {
     static instance;
     static inst = false;
     mysql;
+    encoder;
     constructor() {
         if (DataBase.inst) { throw "too many instances" }
         DataBase.inst = true;
@@ -18,6 +20,7 @@ class DataBase {
             database: 'GOT',
             insecureAuth: true
         };
+        this.encoder = new compression.Huffman();
     }
     static Instance() {
         if (!this.instance) {
@@ -44,8 +47,8 @@ class DataBase {
     }
 
     async insertArchivo(ruta, commit, contenido) {
-        let encoder = new Huffman();
-        let contents = encoder.compress(contenido);
+       
+        let contents = this.encoder.compress(contenido);
         let sql = `INSERT INTO ARCHIVO (ruta, commit_id, huffman_code, huffman_tree)
                     values ("${ruta}", ${commit}, "${contents.code}", "${contents.tabla}")`
         return await this.executeQuery(sql);
@@ -53,8 +56,8 @@ class DataBase {
 
     async getFile(ruta, callback) {
         let sql = `SELECT * FROM ARCHIVO where ruta="${ruta}"`;
-        let file =  await this.executeQuery(sql);
-        console.log(file)
+        let [file] =  await this.executeQuery(sql);
+        return file;
     }
 
     async test2() {
@@ -67,7 +70,7 @@ module.exports.DataBase = DataBase;
 
 let DB = DataBase.Instance()
 async function tester() {
-    let res = await DB.insertRepo("peaassssssso");
+    let res = await DB.getFile("/sdasdasdasda/asdasds/asdasd.js");
     console.log(res)
 }
 tester()
