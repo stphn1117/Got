@@ -24,7 +24,7 @@ ruta VARCHAR(512) NOT NULL,
 commit_id INT NOT NULL,
 FOREIGN KEY (commit_id) REFERENCES COMMITS(id),
 huffman_code MEDIUMTEXT,
-huffman_table TEXT(655353)
+huffman_table MEDIUMTEXT
 );
 
 -- Tabla de  cambios 

@@ -96,7 +96,7 @@ class Huffman {
         this.nodeCounter = 1;
         let result ={
             code : output,
-            tabla: charCodes
+            tabla: charCodes.replace("'",`singleQuote`)
         }
         
         return result;
@@ -116,6 +116,7 @@ class Huffman {
     }
 
     decompress(textCode, charCodes) {
+        charCodes = JSON.parse(charCodes.replace("singleQuote", "'"));
         this.generateTreeByCode(charCodes);
         //this.HuffmanTree.print();
         var text = this.HuffmanTree.readTreeByCode(textCode);
@@ -135,7 +136,7 @@ They are unsorted. The order of the elements cannot be guaranteed. If you want g
 you need to use an array. This will require you to change your data structure.`
 let result = h.compress(txt);
 console.log(result);
-let check = h.decompress(result.code, JSON.parse(result.tabla))
+let check = h.decompress(result.code, result.tabla)
 console.log(md5(check) == md5(txt))
 
 var charCodes = { codes:
