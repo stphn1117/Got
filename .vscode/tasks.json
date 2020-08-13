@@ -4,9 +4,24 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "compile got",
+            "label": "compile got Jose",
             "type": "shell",
-            "command": "bash tasks/build.sh"
+            "command": "bash tasks/buildJose.sh"
+        },
+        {
+            "label": "compile got Stphn",
+            "type": "shell",
+            "command": "bash tasks/buildTefa.sh"
+        },
+        {
+            "label": "compile Vale",
+            "type": "shell",
+            "command": "bash tasks/buildVale.sh"
+        },
+        {
+            "label": "compile Ema",
+            "type": "shell",
+            "command": "bash tasks/buildEma.sh"
         },
         {
             "label": "launch server",

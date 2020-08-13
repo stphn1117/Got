@@ -1,5 +1,11 @@
 let mysql = require("mysql");
 let util = require("util");
+const Huffman = new (require("./Huffman").Huffman)();
+const md5 = require("md5");
+const diff = require("diff");
+
+
+
 
 class DataBase {
     static instance;
@@ -32,13 +38,25 @@ class DataBase {
 			conn.end();
         })
     }
+    /**
+     * 
+     * @param {id que identifica el repositorio en la metadata del cliente} repositorioId 
+     * @param {autor del commit. por ahora es nulo} autor 
+     * @param {mensaje a ser guardado como parte del commit} mensaje 
+     * @param {hora en la que se realizó el commit} hora 
+     * @param {lista de archivos a ser guardados en la base de datos} addFiles 
+     * @param {lista de cambios a ser guardados sobre los archivos} changes 
+     * @param {función que recibe el id del commit procesado} callback 
+     */
     addCommit(repositorioId, autor, mensaje, hora, addFiles, changes, callback) {
-        let sql = `
-            INSERT INTO COMMITS (rep_id, autor, mensaje, hora)
-            VALUES (${repositorioId}, ${autor}, ${mensaje}, ${hora});`;
+        let sql = `INSERT INTO COMMITS (rep_id, autor, mensaje, hora)
+                VALUES (${repositorioId}, ${autor}, ${mensaje}, ${Date.now});`;
 
-		let conn = mysql.createConnection(this.mysql)
+        let conn = mysql.createConnection(this.mysql)
         conn.query(sql, (err, result, fields)=>{
+
+
+
 			callback(result.insertId);
 			conn.end();
 		});
