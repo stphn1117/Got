@@ -4,8 +4,6 @@ const md5 = require("md5");
 const diff = require("diff");
 const Huffman = require("./Huffman");
 
-
-
 class DataBase {
     static instance;
     static inst = false;
