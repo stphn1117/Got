@@ -1,4 +1,4 @@
-var btree = require('/home/valeria/Documents/Got/Server/src/BinaryTree.js');
+var btree = require('./BinaryTree.js');
 
 //freqMatrix = [[frequency, "char"],
 //              [frequency, "char"]]
@@ -89,6 +89,12 @@ class Huffman {
         this.generateOutput(this.text);
         console.log(this.HuffmanTree.charCodes);
         this.HuffmanTree = new btree.Tree();
+        let result ={
+            code : "",
+            tabla: ""
+        }
+        return result;
+
     }
 
     generateTreeByCode(charCodes) {
@@ -109,12 +115,13 @@ class Huffman {
         this.HuffmanTree.print();
         var text = this.HuffmanTree.readTreeByCode(textCode);
         console.log(text);
+        return text;
     }
 }
 
+module.exports.Huffman = Huffman;
 /* _________________/ EXAMPLE /_________________________
 
-module.exports.Huffman = Huffman;
 
 var h = new Huffman();
 //h.compress("First off, that's not JSON. It's a JavaScript object literal. JSON is a string representation of data, that just so happens to very closely resemble JavaScript syntax. Second, you have an object. They are unsorted. The order of the elements cannot be guaranteed. If you want guaranteed order, you need to use an array. This will require you to change your data structure.");

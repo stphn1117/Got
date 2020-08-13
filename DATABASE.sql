@@ -15,7 +15,7 @@ rep_id INT NOT NULL,
 FOREIGN KEY (rep_id) REFERENCES REPOSITORIO(id),
 autor VARCHAR(128),
 mensaje VARCHAR(255),
-hora TIME
+horaFecha DATETIME
 );
 
 CREATE TABLE IF NOT EXISTS ARCHIVO(
@@ -24,7 +24,7 @@ ruta VARCHAR(512) NOT NULL,
 commit_id INT NOT NULL,
 FOREIGN KEY (commit_id) REFERENCES COMMITS(id),
 huffman_code MEDIUMTEXT,
-huffman_tree TEXT(655353)
+huffman_table TEXT(655353)
 );
 
 -- Tabla de  cambios 
@@ -35,5 +35,5 @@ FOREIGN KEY (commit_id) REFERENCES COMMITS(id),
 archivo INT NOT NULL, 
 FOREIGN KEY (archivo) REFERENCES ARCHIVO(id),
 diff_output TEXT(65535) NOT NULL,
-correctChecksum varchar(256)
+md5 varchar(256)
 );

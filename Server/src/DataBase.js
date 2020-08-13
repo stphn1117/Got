@@ -1,18 +1,18 @@
-let mysql2 = require("mysql2/promise");
-let util = require("util");
+const mysql2 = require("mysql2/promise");
+const util = require("util");
 const md5 = require("md5");
 const diff = require("diff");
-
+const Huffman = require("./Huffman");
 
 
 
 class DataBase {
     static instance;
-    static inst=false;
+    static inst = false;
     mysql;
-    constructor(){
-        if(DataBase.inst){throw "too many instances"}
-        DataBase.inst=true;
+    constructor() {
+        if (DataBase.inst) { throw "too many instances" }
+        DataBase.inst = true;
         this.mysql = {
             host: 'localhost',
             user: 'root',
@@ -21,23 +21,31 @@ class DataBase {
             insecureAuth: true
         };
     }
-    static Instance(){
-        if(!this.instance){
+    static Instance() {
+        if (!this.instance) {
             this.instance = new DataBase();
         }
         return this.instance;
     }
-
-    async insertRepo(name, callback) {
-        let sql = `INSERT INTO REPOSITORIO (nombre) VALUES ("${name}")`;
-        let conn = mysql2.createConnection(this.mysql);
-        
-
-        conn.query(sql, (err, result, fields)=>{
-            callback(result.InsertId);
-			conn.end();
-        })
+    async executeQuery(query){
+        const conn = await mysql2.createConnection(this.mysql)
+        const [result] = await conn.execute(query);
+        conn.end();
+        return result;
     }
+
+    async insertRepo(name) {
+        const result = await this.executeQuery(`INSERT INTO REPOSITORIO (nombre) VALUES ("${name}")`)
+        return result.insertId;
+    }
+    async insertArchivo(ruta, commit, contenido){
+        let encoder = new Huffman();
+        let contents = encoder.compress(contenido);
+        let sql = `INSERT INTO ARCHIVO (ruta, commit_id, huffman_code, huffman_tree)
+                    values ("${ruta}", ${commit}, "${contents.code}", "")`
+    }   
+
+
     /**
      * 
      * @param {id que identifica el repositorio en la metadata del cliente} repositorioId 
@@ -51,29 +59,29 @@ class DataBase {
     async addCommit(repositorioId, autor, mensaje, hora, addFiles, changes, callback) {
         let sql = `INSERT INTO COMMITS (rep_id, autor, mensaje, hora)
                 VALUES (${repositorioId}, ${autor}, ${mensaje}, ${Date.now});`;
-
         let conn = mysql2.createConnection(this.mysql)
-        conn.query(sql, (err, result, fields)=>{
-
-
-
-			callback(result.insertId);
-			conn.end();
-		});
     }
-	async getFile(fileId, callback){
-		let sql = `SELECT * FROM ARCHIVO`;
-		
+    async getFile(ruta, callback) {
+        let sql = `SELECT * FROM ARCHIVO where ruta="${ruta}"`;
+        let result = this.executeQuery(sql);
+        return result
     }
-    async test2(){
-        const conn = await mysql2.createConnection(this.mysql)
-        const [result] = await conn.execute(`SHOW TABLES`);
-        conn.end()
+    
+    async test2() {
+        const result = await this.executeQuery("SHOW TABLES")
         return result;
     }
 }
 
 module.exports.DataBase = DataBase;
 
-let DB = DataBase.Instance()
 
+
+
+
+let DB = DataBase.Instance()
+async function tester(){
+    //let res = await DB.insertRepo("peeaasdasdpo");
+    //console.log(res)
+}
+tester()
