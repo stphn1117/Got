@@ -127,11 +127,16 @@ class Huffman {
 module.exports.Huffman = Huffman;
 
 var h = new Huffman();
-let txt = "First off, that's not JSON. It's a JavaScript object literal. JSON is a string representation of data, that just so happens to very closely resemble JavaScript syntax. Second, you have an object. They are unsorted. The order of the elements cannot be guaranteed. If you want guaranteed order, you need to use an array. This will require you to change your data structure."
+let txt = `First off, that's not JSON. 
+It's a JavaScript object literal.
+JSON is a string representation of data, 
+that just so happens to very closely resemble JavaScript syntax. Second, you have an object. 
+They are unsorted. The order of the elements cannot be guaranteed. If you want guaranteed order, 
+you need to use an array. This will require you to change your data structure.`
 let result = h.compress(txt);
 console.log(result);
 let check = h.decompress(result.code, JSON.parse(result.tabla))
-console.log(check == txt)
+console.log(md5(check) == md5(txt))
 
 var charCodes = { codes:
     [ { code: '010000010', char: 'F' },
