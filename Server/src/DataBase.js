@@ -38,15 +38,19 @@ class DataBase {
         const result = await this.executeQuery(`INSERT INTO REPOSITORIO (nombre) VALUES ("${name}")`)
         return result.insertId;
     }
+
     async insertCommit(repoId, parentCommit, mensaje, autor = "") {
         let sql = `INSERT INTO COMMITS (rep_id, parent_commit, mensaje, autor)
         VALUES (${repoId}, ${parentCommit}, ${mensaje}, "${autor}");`;
+        return this.executeQuery(sql)
     }
+
     async insertArchivo(ruta, commit, contenido) {
         let encoder = new Huffman();
         let contents = encoder.compress(contenido);
         let sql = `INSERT INTO ARCHIVO (ruta, commit_id, huffman_code, huffman_tree)
                     values ("${ruta}", ${commit}, "${contents.code}", "${contents.tabla}")`
+        this.executeQuery(sql);
         
     }
 
@@ -62,11 +66,8 @@ class DataBase {
     }
 }
 
+
 module.exports.DataBase = DataBase;
-
-
-
-
 
 let DB = DataBase.Instance()
 async function tester() {
