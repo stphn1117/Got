@@ -32,7 +32,7 @@ class DataBase {
 			conn.end();
         })
     }
-    addCommit(repositorioId, autor, mensaje, hora,addFiles, changes, callback) {
+    addCommit(repositorioId, autor, mensaje, hora, addFiles, changes, callback) {
         let sql = `
             INSERT INTO COMMITS (rep_id, autor, mensaje, hora)
             VALUES (${repositorioId}, ${autor}, ${mensaje}, ${hora});`;

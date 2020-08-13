@@ -4,12 +4,14 @@ class Node {
         this.value = value
         this.right = null
         this.left = null
+        this.prev = null
     }
 }
 
 class Tree {
     constructor() {
         this.root = null
+        this.nodes = [];
         this.output = "";
         this.charCodes = { "codes": [] };
     }
@@ -18,29 +20,92 @@ class Tree {
         return this.root === null
     }
 
-    addByText(Rnode, Lnode, F, nodeCounter) {
+    print(node = this.root) {
+        if (!node) {
+            return
+
+        } else if (!node.right && !node.left) {
+            console.log("ROOT: " + node.value);
+            console.log("LEFT: null");
+            console.log("RIGHT: null\n");
+
+        } else if (!node.right) {
+            console.log("ROOT: " + node.value);
+            console.log("LEFT: " + node.left.value);
+            console.log("RIGHT: null\n");
+            this.print(node.left);
+
+        } else if (!node.left) {
+            console.log("ROOT: " + node.value);
+            console.log("LEFT: null");
+            console.log("RIGHT: " + node.right.value + "\n");
+            this.print(node.right);
+
+        } else {
+            if (node.prev) {
+                console.log("PREV: " + node.prev.value);
+            }
+            console.log("ROOT: " + node.value);
+            console.log("LEFT: " + node.left.value);
+            console.log("RIGHT: " + node.right.value + "\n");
+            this.print(node.left);
+            this.print(node.right);
+        }
+    }
+
+    addByText(R, L, F) {
         if (this.isEmpty()) {
             this.root = new Node(F);
-            this.root.left = new Node(Lnode);
-            this.root.right = new Node(Rnode);
+            this.root.left = new Node(L);
+            this.root.right = new Node(R);
+            this.root.left.prev = this.root;
+            this.root.right.prev = this.root;
+            this.nodes.push(this.root);
             return
-        } else {
-            if (Lnode[1] == "N" + nodeCounter.toString()) {
-                var aux = this.root  //raiz actual
-                this.root = new Node(F);
-                this.root.left = aux;
-                this.root.right = new Node(Rnode)
-                return
-            } else {
-                var aux = this.root  //raiz actual
-                this.root = new Node(F);
-                this.root.left = new Node(Lnode);
-                this.root.right = aux;
+        }
+        for (var i in this.nodes) {
+            for (var j in this.nodes) {
+                if ((R[1] == this.nodes[i].value[1] && L[1] == this.nodes[j].value[1]) || (L[1] == this.nodes[i].value[1] && R[1] == this.nodes[j].value[1])) {
+                    console.log
+                    var node = new Node(F);
+                    node.right = this.nodes[i];
+                    node.left = this.nodes[j];
+                    node.left.prev = node;
+                    node.right.prev = node;
+                    this.root = node;
+                    this.nodes.push(node);
+                    return;
+                }
+            }
+            if (R[1] == this.nodes[i].value[1]) {
+                var node = new Node(F);
+                node.left = new Node(L);
+                node.right = this.nodes[i];
+                node.left.prev = node;
+                node.right.prev = node;
+                this.nodes.push(node);
+                this.root = node;
+                return;
+
+            } else if (L[1] == this.nodes[i].value[1]) {
+                var node = new Node(F);
+                node.left = this.nodes[i];
+                node.right = new Node(R);
+                node.left.prev = node;
+                node.right.prev = node;
+                this.nodes.push(node);
+                this.root = node;
                 return
             }
-
         }
-
+        var node = new Node(F);
+        node.left = new Node(L);
+        node.right = new Node(R);
+        node.left.prev = node;
+        node.right.prev = node;
+        this.nodes.push(node);
+        this.root = node;
+        return
     }
 
     addByCode(charCode, char, nodeCounter) {
@@ -75,97 +140,40 @@ class Tree {
                 }
             }
         }
-
         position = new Node(char);
-    }
-
-    print(node = this.root) {
-        if (!node) {
-            return
-
-        } else if (!node.right && !node.left) {
-            console.log("ROOT: " + node.value);
-            console.log("LEFT: null");
-            console.log("RIGHT: null\n");
-
-        } else if (!node.right) {
-            console.log("ROOT: " + node.value);
-            console.log("LEFT: " + node.left.value);
-            console.log("RIGHT: null\n");
-            this.print(node.left);
-
-        } else if (!node.left) {
-            console.log("ROOT: " + node.value);
-            console.log("LEFT: null");
-            console.log("RIGHT: " + node.right.value + "\n");
-            this.print(node.right);
-
-        } else {
-            console.log("ROOT: " + node.value);
-            console.log("LEFT: " + node.left.value);
-            console.log("RIGHT: " + node.right.value + "\n");
-            this.print(node.left);
-            this.print(node.right);
-        }
     }
 
     readTreeByText(char, node = this.root, output = [], dir = '') {
         if (!node) {
-            if (dir == 'left') {
-                output.pop();
-                output.pop();
-
-            } else if (dir == 'right') {
-                output.pop();
-            }
-            return;
 
         } else if (node.value[1] == char) {
-            var code = "";
-            for (var i in output) {
-                this.output += output[i].toString();
-                code += output[i].toString();
-            }
-            this.saveCode(char, code);
+            var charOutput = this.generateCharCode(node);
+            this.output += charOutput;
+            this.saveCode(char, charOutput);
+            console.log(char, charOutput);
 
         } else {
-            output.push(0);
-            this.readTree(char, node.left, output, 'left');
-            output.push(1);
-            this.readTree(char, node.right, output, 'right');
+            this.readTreeByText(char, node.left, output, 'left');
+            this.readTreeByText(char, node.right, output, 'right');
         }
     }
 
-    readTreeByCode(textCode, node = this.root) {
-        var text = "";
-        for (var i in textCode) {
-            console.log(textCode[i], node);
-            if (!node) {
-
-            } else if (textCode[i] == "1") {
-                if (!node.right.right) {
-                    text += node.right.value;
-                    node = this.root;
-                    console.log("end");
-                } else {
-                    node = node.right;
-                }
-            } else if (textCode[i] == "0") {
-                if (!node.left.left) {
-                    text += node.left.value;
-                    node = this.root;
-                    console.log("end");
-
-                } else {
-                    node = node.left;
-                }
+    generateCharCode(node) {
+        var charCode = "";
+        while (node != this.root) {
+            if (node.prev.left.value[1] == node.value[1]) {
+                charCode += "0";
+            } else if (node.prev.right.value[1] == node.value[1]) {
+                charCode += "1";
             }
-        } return text;
+            node = node.prev;
+        }
+        return charCode.split("").reverse().join("");
     }
 
     saveCode(char, output) {
         var exist = false;
-        for (var i in this.codes["codes"]) {
+        for (var i in this.charCodes["codes"]) {
             if (this.charCodes["codes"][i]["char"] == char) {
                 exist = true;
             }
@@ -174,6 +182,29 @@ class Tree {
         if (exist == false) {
             this.charCodes["codes"].push({ "code": output, "char": char });
         }
+    }
+
+    readTreeByCode(textCode, node = this.root) {
+        var text = "";
+        for (var i in textCode) {
+            if (!node) {
+
+            } else if (textCode[i] == "1") {
+                if (!node.right.right) {
+                    text += node.right.value;
+                    node = this.root;
+                } else {
+                    node = node.right;
+                }
+            } else if (textCode[i] == "0") {
+                if (!node.left.left) {
+                    text += node.left.value;
+                    node = this.root;
+                } else {
+                    node = node.left;
+                }
+            }
+        } return text;
     }
 }
 module.exports.Tree = Tree;
