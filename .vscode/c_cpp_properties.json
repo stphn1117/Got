@@ -4,7 +4,7 @@
             "name": "Linux",
             "includePath": [
                 "${workspaceFolder}/**",
-                "/usr/share/vcpkg/**"
+                "/home/emanue19/Downloads/vcpkg-master/**"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/gcc",

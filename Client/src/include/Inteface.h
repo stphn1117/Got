@@ -7,11 +7,17 @@
 
 class Interface{
     public:
-
-        char command[7];
-        void getCommand(char * theCom[]);
+    // user
+        void getCommand(int count, char * theCom[]);
         void sendComand();
-        void readFile();
+    //server
+        void toClient(int count, char * theCom[]);
+        void fromClient();
+        
+        void createFile();
+        void handleCommitFile();
+        void addFiles();
+        void back(char * theCom[]);
     
 };
 
