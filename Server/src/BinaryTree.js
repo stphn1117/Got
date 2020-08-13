@@ -64,10 +64,9 @@ class Tree {
             return
         }
         for (var i in this.nodes) {
+            var node = new Node(F);
             for (var j in this.nodes) {
                 if ((R[1] == this.nodes[i].value[1] && L[1] == this.nodes[j].value[1]) || (L[1] == this.nodes[i].value[1] && R[1] == this.nodes[j].value[1])) {
-                    console.log
-                    var node = new Node(F);
                     node.right = this.nodes[i];
                     node.left = this.nodes[j];
                     node.left.prev = node;
@@ -78,7 +77,6 @@ class Tree {
                 }
             }
             if (R[1] == this.nodes[i].value[1]) {
-                var node = new Node(F);
                 node.left = new Node(L);
                 node.right = this.nodes[i];
                 node.left.prev = node;
@@ -88,7 +86,6 @@ class Tree {
                 return;
 
             } else if (L[1] == this.nodes[i].value[1]) {
-                var node = new Node(F);
                 node.left = this.nodes[i];
                 node.right = new Node(R);
                 node.left.prev = node;
@@ -140,21 +137,19 @@ class Tree {
                 }
             }
         }
-        position = new Node(char);
     }
 
     readTreeByText(char, node = this.root, output = [], dir = '') {
-        if (!node) {
+        if (node) {
+            if (node.value[1] == char) {
+                var charOutput = this.generateCharCode(node);
+                this.output += charOutput;
+                this.saveCode(char, charOutput);
 
-        } else if (node.value[1] == char) {
-            var charOutput = this.generateCharCode(node);
-            this.output += charOutput;
-            this.saveCode(char, charOutput);
-            console.log(char, charOutput);
-
-        } else {
-            this.readTreeByText(char, node.left, output, 'left');
-            this.readTreeByText(char, node.right, output, 'right');
+            } else {
+                this.readTreeByText(char, node.left, output, 'left');
+                this.readTreeByText(char, node.right, output, 'right');
+            }
         }
     }
 
@@ -187,21 +182,21 @@ class Tree {
     readTreeByCode(textCode, node = this.root) {
         var text = "";
         for (var i in textCode) {
-            if (!node) {
-
-            } else if (textCode[i] == "1") {
-                if (!node.right.right) {
-                    text += node.right.value;
-                    node = this.root;
-                } else {
-                    node = node.right;
-                }
-            } else if (textCode[i] == "0") {
-                if (!node.left.left) {
-                    text += node.left.value;
-                    node = this.root;
-                } else {
-                    node = node.left;
+            if (node) {
+                if (textCode[i] == "1") {
+                    if (!node.right.right) {
+                        text += node.right.value;
+                        node = this.root;
+                    } else {
+                        node = node.right;
+                    }
+                } else if (textCode[i] == "0") {
+                    if (!node.left.left) {
+                        text += node.left.value;
+                        node = this.root;
+                    } else {
+                        node = node.left;
+                    }
                 }
             }
         } return text;
