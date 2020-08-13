@@ -21,13 +21,11 @@ void Client::init(std::string& repo_name){
     std::cout<<"repo_id: "<<repo_id<<std::endl;
 }
 
-void Client::commit(int repo_id, std::string author, std::string messageCommit, 
-    std::string date, json files){
+void Client::commit(int repo_id, std::string author, std::string messageCommit, json files){
     json output = {
         {"repo_id", repo_id},
         {"author", author},
         {"messageCommit", messageCommit},
-        {"date", date},
         {"files", files}        
     };
 

@@ -43,10 +43,10 @@ app.post('/api/repo/init', async (req, res) => {
 
 app.post('/api/repo/:id/commit', async (req, res) => {
     console.log(req.body);
-    const { repo_id, author, messageCommit, date } = req.body;
+    const { repo_id, author, messageCommit } = req.body;
 
     //Validate the request from client
-    if(repo_id && author && messageCommit && date){
+    if(repo_id && author && messageCommit){
         const object = {
             "message": "Commit done",
             "commit_id": 100 
