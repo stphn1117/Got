@@ -48,19 +48,17 @@ class DataBase {
         let contents = encoder.compress(contenido);
         let sql = `INSERT INTO ARCHIVO (ruta, commit_id, huffman_code, huffman_tree)
                     values ("${ruta}", ${commit}, "${contents.code}", "${contents.tabla}")`
-        this.executeQuery(sql);
-        
+        return await this.executeQuery(sql);
     }
 
     async getFile(ruta, callback) {
         let sql = `SELECT * FROM ARCHIVO where ruta="${ruta}"`;
-        let result = this.executeQuery(sql);
-        return result
+        let file =  await this.executeQuery(sql);
+        console.log(file)
     }
 
     async test2() {
-        const result = await this.executeQuery("SHOW TABLES")
-        return result;
+        return await this.executeQuery("SHOW TABLES")
     }
 }
 
@@ -69,7 +67,7 @@ module.exports.DataBase = DataBase;
 
 let DB = DataBase.Instance()
 async function tester() {
-    let res = await DB.insertRepo("peeaasdasdpo");
+    let res = await DB.insertRepo("peaassssssso");
     console.log(res)
 }
 tester()
