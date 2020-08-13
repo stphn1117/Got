@@ -58,6 +58,8 @@ class DataBase {
     }
 }
 
+module.exports.DataBase = DataBase;
+
 let DB = DataBase.Instance()
 console.log(DB.insertRepo("hemlo",(a)=>{
     console.log(a);
