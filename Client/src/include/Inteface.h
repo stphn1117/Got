@@ -14,7 +14,7 @@ class Interface{
         void toClient(int count, char * theCom[]);
         void fromClient();
         
-        void createFile();
+        void createFile(int count, char * theCom[]);
         void handleCommitFile();
         void addFiles();
         void back(char * theCom[]);
