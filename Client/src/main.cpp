@@ -3,6 +3,7 @@
 #include "include/Inteface.h"
 using namespace std;
 int main(int argc, char* argv[]){
+    /*
     Client c;
     std::string command;
     while(command != "-1"){
@@ -13,16 +14,16 @@ int main(int argc, char* argv[]){
 
     json files = json::array();
     c.commit(1, "Emanuel19", "testing Got", "12/08/2020", files);
-
+*/
     
-    /*Interface input;
+    Interface input;
     for (int i = 0; i < argc; ++i) {
         if(i == 4){
             printf(" \n too much arguments, write help to get more information \n");
         }
     }
 
-    input.getCommand(argc, argv);*/
+    input.getCommand(argc, argv);
 
 
     /*
