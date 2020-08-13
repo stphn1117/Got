@@ -27,7 +27,7 @@ class DataBase {
         }
         return this.instance;
     }
-    async executeQuery(query){
+    async executeQuery(query) {
         const conn = await mysql2.createConnection(this.mysql)
         const [result] = await conn.execute(query);
         conn.end();
@@ -38,35 +38,24 @@ class DataBase {
         const result = await this.executeQuery(`INSERT INTO REPOSITORIO (nombre) VALUES ("${name}")`)
         return result.insertId;
     }
-    async insertArchivo(ruta, commit, contenido){
+    async insertCommit(repoId, parentCommit, mensaje, autor = "") {
+        let sql = `INSERT INTO COMMITS (rep_id, parent_commit, mensaje, autor)
+        VALUES (${repoId}, ${parentCommit}, ${mensaje}, "${autor}");`;
+    }
+    async insertArchivo(ruta, commit, contenido) {
         let encoder = new Huffman();
         let contents = encoder.compress(contenido);
         let sql = `INSERT INTO ARCHIVO (ruta, commit_id, huffman_code, huffman_tree)
-                    values ("${ruta}", ${commit}, "${contents.code}", "")`
-    }   
-
-
-    /**
-     * 
-     * @param {id que identifica el repositorio en la metadata del cliente} repositorioId 
-     * @param {autor del commit. por ahora es nulo} autor 
-     * @param {mensaje a ser guardado como parte del commit} mensaje 
-     * @param {hora en la que se realizó el commit} hora 
-     * @param {lista de archivos a ser guardados en la base de datos} addFiles 
-     * @param {lista de cambios a ser guardados sobre los archivos} changes 
-     * @param {función que recibe el id del commit procesado} callback 
-     */
-    async addCommit(repositorioId, autor, mensaje, hora, addFiles, changes, callback) {
-        let sql = `INSERT INTO COMMITS (rep_id, autor, mensaje, hora)
-                VALUES (${repositorioId}, ${autor}, ${mensaje}, ${Date.now});`;
-        let conn = mysql2.createConnection(this.mysql)
+                    values ("${ruta}", ${commit}, "${contents.code}", "${contents.tabla}")`
+        
     }
+
     async getFile(ruta, callback) {
         let sql = `SELECT * FROM ARCHIVO where ruta="${ruta}"`;
         let result = this.executeQuery(sql);
         return result
     }
-    
+
     async test2() {
         const result = await this.executeQuery("SHOW TABLES")
         return result;
@@ -80,8 +69,8 @@ module.exports.DataBase = DataBase;
 
 
 let DB = DataBase.Instance()
-async function tester(){
-    //let res = await DB.insertRepo("peeaasdasdpo");
-    //console.log(res)
+async function tester() {
+    let res = await DB.insertRepo("peeaasdasdpo");
+    console.log(res)
 }
 tester()

@@ -1,4 +1,5 @@
 var btree = require('./BinaryTree.js');
+const md5 = require('md5');
 
 //freqMatrix = [[frequency, "char"],
 //              [frequency, "char"]]
@@ -15,7 +16,7 @@ class Huffman {
     readTextFile(file) {
         var fs = require('fs');
         var textByLine = fs.readFileSync(file).toString();
-        console.log(textByLine);
+        //console.log(textByLine);
         return textByLine;
     }
 
@@ -46,7 +47,7 @@ class Huffman {
             return a[0] - b[0]
         });
 
-        console.log(this.freqMatrix);
+        //console.log(this.freqMatrix);
     }
 
     selectLR() {
@@ -69,7 +70,7 @@ class Huffman {
             //console.log("\n\n");
             //console.log(this.freqMatrix);
         }
-        console.log("\n\n");
+        //console.log("\n\n");
         this.HuffmanTree.print();
     }
 
@@ -78,7 +79,7 @@ class Huffman {
             this.HuffmanTree.readTreeByText(text[i]);
         }
 
-        console.log(this.HuffmanTree.output);
+        //console.log(this.HuffmanTree.output);
         return this.HuffmanTree.output;
     }
 
@@ -88,7 +89,7 @@ class Huffman {
         this.selectLR();
         let output = this.generateOutput(this.text);
         let charCodes = JSON.stringify(this.HuffmanTree.charCodes);
-        console.log(charCodes);
+        //console.log(charCodes);
 
         let result ={
             code : output,
@@ -104,7 +105,7 @@ class Huffman {
             return a.code - b.code;
         });
 
-        console.log(charCodes);
+       // console.log(charCodes);
         for (var i in charCodes["codes"]) {
             this.HuffmanTree.addByCode(charCodes["codes"][i]["code"], charCodes["codes"][i]["char"], this.nodeCounter);
             this.nodeCounter++;
@@ -113,18 +114,23 @@ class Huffman {
 
     decompress(textCode, charCodes) {
         this.generateTreeByCode(charCodes);
-        this.HuffmanTree.print();
+        //this.HuffmanTree.print();
         var text = this.HuffmanTree.readTreeByCode(textCode);
-        console.log(text);
+        return text;
     }
 }
-
 // _________________/ EXAMPLE /_________________________
 
 module.exports.Huffman = Huffman;
 
 var h = new Huffman();
-h.compress("First off, that's not JSON. It's a JavaScript object literal. JSON is a string representation of data, that just so happens to very closely resemble JavaScript syntax. Second, you have an object. They are unsorted. The order of the elements cannot be guaranteed. If you want guaranteed order, you need to use an array. This will require you to change your data structure.");
+let txt = "First off, that's not JSON. It's a JavaScript object literal. JSON is a string representation of data, that just so happens to very closely resemble JavaScript syntax. Second, you have an object. They are unsorted. The order of the elements cannot be guaranteed. If you want guaranteed order, you need to use an array. This will require you to change your data structure."
+let result = h.compress(txt);
+console.log(result)
+let check = h.decompress(result.code, JSON.parse(result.tabla))
+console.log(check)
+
+
 var charCodes = { codes:
     [ { code: '010000010', char: 'F' },
      { code: '10101', char: 'i' },

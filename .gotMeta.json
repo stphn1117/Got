@@ -1,5 +1,6 @@
 {
     "id": 1,
+    "lastCommitId":0,
     "nombre":"sadasd",
     "tracked":["folder1/ff.cc", "./golfdsf/fd.js", ....]
 }

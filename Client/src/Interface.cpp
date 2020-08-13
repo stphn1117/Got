@@ -96,6 +96,7 @@ void Interface::createFile(int count, char **command){
             }
         }
         cout << "Fichero manage.got inexistente" << endl;
+        
         json metadata;
         metadata["id"]= idProject;
         metadata["repoName"]= command[2];
