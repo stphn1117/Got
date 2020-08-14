@@ -4,7 +4,8 @@
 #include <fstream>
 #include <sys/stat.h>
 #include <dirent.h>
-//#include <filesystem>
+
+#include <filesystem>
 
 #include "include/utilities.hpp"
 #include "include/Interface.hpp"
@@ -14,29 +15,57 @@
 //#include "include/dtl/dtl.hpp"
 //#include "dtl/dtl.hpp"
 
+//namespace fs = std::experimental::filesystem;
 
-
-
+json metadata;
+nlohmann::json filesAdded;
+json TrackFiles(json filesToTrack);
+int testing();
 
 void Interface::getCommand(int count, char **command){
     if(strcmp(command[1], "help") == 0) {
         ce::debuglog(" instructions:\n\n init <name>\n\n add [-A] [name]\n\n commit <message>\n\n reset <file>\n\n sync<file>\n\n");
     }else if(strcmp(command[1], "init") == 0){
-        
-            createFile(count, command,4);
-       
+            createProject(count, command,4);
     }else if(strcmp(command[1], "commit") == 0){
-        handleCommitFile();
-    }else if(strcmp(command[1], "rollback") == 0 || strcmp(command[1], "reset") == 0){
-        
+            //handleCommitFile();
+    }else if(strcmp(command[1], "Add") == 0){
+        handleAddFile(command);
     }else if(strcmp(command[1], "test") == 0){
-        toClient(count, command);
+        //testing();
     }else{
+        ce::debuglog("the command isn't correct, execute help command");
         //ask to server
     }
 }
 
-void Interface::createFile(int count, char **command, int id){
+
+json TrackFiles(json filesToTrack){
+
+        DIR *dp;
+        struct dirent *ep;     
+        dp = opendir ("./");
+        if (dp != NULL)
+        {       
+           while (ep = readdir (dp))
+            //puts (ep->d_name);
+                if(strcmp(ep->d_name, "..") == 0){
+                    ce::log("delete dir ..");
+                }else if(strcmp(ep->d_name, ".") == 0){
+                    ce::log("delete dir .");
+                }else{
+                    filesToTrack.push_back(ep->d_name);
+                }
+            (void) closedir (dp);
+        }
+        else
+            perror ("Couldn't open the directory");
+
+return filesToTrack;
+}
+
+
+void Interface::createProject(int count, char **command, int id){
 
 
         //create .gotignore
@@ -61,28 +90,11 @@ void Interface::createFile(int count, char **command, int id){
 
         nlohmann::json filesTrack;
 
-
-        if (dp != NULL)
-        {       
-           while (ep = readdir (dp))
-            //puts (ep->d_name);
-                if(strcmp(ep->d_name, "..") == 0){
-                    ce::log("delete dir ..");
-                }else if(strcmp(ep->d_name, ".") == 0){
-                    ce::log("delete dir .");
-                }else{
-                    filesTrack.push_back(ep->d_name);
-                }
-            (void) closedir (dp);
-        }
-        else
-            perror ("Couldn't open the directory");
-
-            
-        json metadata;
+        
+        
         metadata["id"]= id;
         metadata["repoName"]= command[2];
-        metadata["tracked"] = filesTrack;
+        metadata["tracked"] = TrackFiles(filesTrack);
         
         metadataFile << metadata;
         metadataFile.close();
@@ -91,12 +103,32 @@ void Interface::createFile(int count, char **command, int id){
 }
 
 
-void Interface::handleCommitFile(){
-        std::ifstream file("../Got/miprueba.js");
-        if(file.is_open())
-        std::cout << file.rdbuf(); 
-}
+void Interface::handleAddFile(char **command){
+    //nlohmann::json filesAdded;
+    FILE *file;
 
+    if(strcmp(command[2], "All") == 0){
+
+    TrackFiles(filesAdded);
+
+    }else{
+
+        if(file = fopen(command[2], "r")) {
+            fclose(file);
+            filesAdded.push_back(command[2]);
+            ce::log("file added");
+            //testing
+            for (json::iterator it = filesAdded.begin(); it != filesAdded.end(); ++it) {
+            std::cout << *it << '\n';
+            }
+
+        } else {
+            ce::log("file doesn't exist");
+        }
+
+    }
+}
 
 void Interface::toClient(int count, char **commands){
 }
+

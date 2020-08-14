@@ -1,5 +1,14 @@
 
+/**
+ * Nodos de la clase arbol binario
+ */
 class Node {
+    /**
+     * Representa un objeto de tipo Node
+     * @constructor
+     * @param {char} value - Valor que guarda el nodo en el arbol de descompresion
+     * @param {Array.<Array.<number,char>>} value - Valor que guarda el nodo en el arbol de compresion
+     */
     constructor(value) {
         this.value = value
         this.right = null
@@ -8,7 +17,14 @@ class Node {
     }
 }
 
+/**
+ * Clase para la construccion de arboles binarios
+ */
 class Tree {
+    /**
+     * Representa un objeto de tipo Tree
+     * @constructor
+     */
     constructor() {
         this.root = null
         this.nodes = [];
@@ -16,10 +32,17 @@ class Tree {
         this.charCodes = { "codes": [] };
     }
 
+    /**
+     * Verifica si el arbol esta vacio
+     */
     isEmpty() {
         return this.root === null
     }
 
+    /**
+     * Imprime la representacion del arbol binario
+     * @param {Node} node - Nodo raiz del arbol a imprimir 
+     */
     print(node = this.root) {
         if (!node) {
             return
@@ -53,6 +76,13 @@ class Tree {
         }
     }
 
+    /**
+     * Agrega los nodos derecho, izquierdo y el nodo combinacion de los valores numericos de dichos nodos. Esto con el proposito de generar 
+     * el arbol para la compresion de un texto.
+     * @param {Array.<number,char>} R - Valor del nodo derecho
+     * @param {Array.<number,char>} L - Valor del nodo izquierdo
+     * @param {Array.<number,char>} F - Valor del nodo combinacion
+     */
     addByText(R, L, F) {
         if (this.isEmpty()) {
             this.root = new Node(F);
@@ -104,6 +134,12 @@ class Tree {
         return
     }
 
+    /**
+     * Agrega nodos a un arbol mediante un codigo de Huffman para realizar la descompresion del mismo
+     * @param {string} charCode - Codigo del caracter 
+     * @param {char} char - Caracter por agregar al arbol
+     * @param {number} nodeCounter - Contador de nodos combinacion en el arbol
+     */
     addByCode(charCode, char, nodeCounter) {
         if (this.isEmpty()) {
             this.root = new Node("N" + nodeCounter);
@@ -138,7 +174,12 @@ class Tree {
         }
     }
 
-    readTreeByText(char, node = this.root, output = [], dir = '') {
+    /**
+     * Lee el arbol binario generado para encontrar la posicion de un caracter y generar su codigo 
+     * @param {char} char - Caracter que se busca en el arbol
+     * @param {Node} node - Nodo raiz del arbol
+     */
+    readTreeByText(char, node = this.root) {
         if (node) {
             if (node.value[1] == char) {
                 var charOutput = this.generateCharCode(node);
@@ -146,12 +187,16 @@ class Tree {
                 this.saveCode(char, charOutput);
 
             } else {
-                this.readTreeByText(char, node.left, output, 'left');
-                this.readTreeByText(char, node.right, output, 'right');
+                this.readTreeByText(char, node.left);
+                this.readTreeByText(char, node.right);
             }
         }
     }
 
+    /**
+     * Genera el codigo de Huffman de un nodo especifico
+     * @param {Node} node - Nodo representativo de un caracter en el arbol
+     */
     generateCharCode(node) {
         var charCode = "";
         while (node != this.root) {
@@ -165,6 +210,11 @@ class Tree {
         return charCode.split("").reverse().join("");
     }
 
+    /**
+     * Guarda el codigo de Huffman obtenido de un caracter en un JSON
+     * @param {char} char - Caracter 
+     * @param {string} output - Codigo del caracter
+     */
     saveCode(char, output) {
         var exist = false;
         for (var i in this.charCodes["codes"]) {
@@ -178,6 +228,11 @@ class Tree {
         }
     }
 
+    /**
+     * Lee un arbol para encontrar los caracteres que forman el texto original segun su codigo de Huffman
+     * @param {string} textCode - Codigo del texto
+     * @param {Node} node - Nodo raiz del arbol
+     */
     readTreeByCode(textCode, node = this.root) {
         var text = "";
         for (var i in textCode) {

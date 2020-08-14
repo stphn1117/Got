@@ -16,14 +16,26 @@ std::shared_ptr<Client> Client::getInstance()
     }
     return instance;
 }
-json Client::getMetaData()
-{
+
+/**
+ * @brief Obtiene el ultimo commit que se encuentra en el archivo metadata
+ *
+ * @return json Ultimo commit
+ */
+json Client::getMetaData(){
     std::ifstream ifs("./.metadata.json");
     json metadata;
     ifs >> metadata;
     return metadata["lastCommit"].get<std::string>();
 }
-int Client::init(std::string &repoName)
+
+/**
+ * @brief Sirve para el comando got init, envia la informacion de un nuevo repositorio para que este sea inicializado en el servidor
+ *
+ * @param repoName Nombre del nuevo repositorio
+ * @return int Estado de la operacion del cliente
+ */
+int Client::init(std::string& repoName)
 {
     json req = {{"name", repoName}};
     auto res = cpr::Post(cpr::Url{url + "/init"}, jsonHeader, cpr::Body{req.dump()});
@@ -70,7 +82,7 @@ int Client::commit(std::string message)
     auto res = cpr::Post(cpr::Url{url + "/commit"}, jsonHeader, cpr::Body{commitJson.dump()});
     json response = json::parse(res.text);
     metaData["lastCommitId"] = response["commit_id"].get<std::string>();
-    
+
 
 
 
