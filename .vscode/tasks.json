@@ -33,6 +33,11 @@
             "label": "launch DataBase test",
             "type": "shell",
             "command": "node Server/src/DataBase.js" 
+        },
+        {
+            "label": "launch compress test",
+            "type": "shell",
+            "command": "node Server/src/Huffman.js" 
         }
     ]
 }

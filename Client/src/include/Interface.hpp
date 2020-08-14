@@ -5,7 +5,7 @@
 //got--> init <name>, help, add[-A] [name], commit <message>, 
 //got-->status <file>, rollback <file> <commit>, reset <file>, sync <file>
 
-class Interface{
+class Interface{ 
     public:
     // user
         void getCommand(int count, char * theCom[]);
@@ -14,7 +14,7 @@ class Interface{
         void toClient(int count, char * theCom[]);
         void fromClient();
         
-        void createFile(int count, char * theCom[]);
+        void createFile(int count, char * theCom[], int id);
         void handleCommitFile();
         void addFiles();
         void back(char * theCom[]);

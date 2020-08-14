@@ -2,9 +2,6 @@ const mysql2 = require("mysql2/promise");
 const util = require("util");
 const md5 = require("md5");
 const diff = require("diff");
-const Huffman = require("./Huffman");
-
-
 
 class DataBase {
     static instance;
@@ -27,7 +24,7 @@ class DataBase {
         }
         return this.instance;
     }
-    async executeQuery(query){
+    async executeQuery(query) {
         const conn = await mysql2.createConnection(this.mysql)
         const [result] = await conn.execute(query);
         conn.end();
@@ -38,50 +35,27 @@ class DataBase {
         const result = await this.executeQuery(`INSERT INTO REPOSITORIO (nombre) VALUES ("${name}")`)
         return result.insertId;
     }
-    async insertArchivo(ruta, commit, contenido){
-        let encoder = new Huffman();
-        let contents = encoder.compress(contenido);
+
+    async insertCommit(id, repoId, parentCommit, mensaje, autor = "") {
+        let sql = `INSERT INTO COMMITS (id, rep_id, parent_commit, mensaje, autor)
+        VALUES (${id},${repoId}, ${parentCommit}, ${mensaje}, "${autor}");`;
+        return this.executeQuery(sql)
+    }
+
+    async insertArchivo(ruta, commit, huffman_code, huffman_table) {
         let sql = `INSERT INTO ARCHIVO (ruta, commit_id, huffman_code, huffman_tree)
-                    values ("${ruta}", ${commit}, "${contents.code}", "")`
-    }   
-
-
-    /**
-     * 
-     * @param {id que identifica el repositorio en la metadata del cliente} repositorioId 
-     * @param {autor del commit. por ahora es nulo} autor 
-     * @param {mensaje a ser guardado como parte del commit} mensaje 
-     * @param {hora en la que se realizó el commit} hora 
-     * @param {lista de archivos a ser guardados en la base de datos} addFiles 
-     * @param {lista de cambios a ser guardados sobre los archivos} changes 
-     * @param {función que recibe el id del commit procesado} callback 
-     */
-    async addCommit(repositorioId, autor, mensaje, hora, addFiles, changes, callback) {
-        let sql = `INSERT INTO COMMITS (rep_id, autor, mensaje, hora)
-                VALUES (${repositorioId}, ${autor}, ${mensaje}, ${Date.now});`;
-        let conn = mysql2.createConnection(this.mysql)
+                    values ("${ruta}", ${commit}, "${huffman_code}", "${huffman_table}")`
+        return await this.executeQuery(sql);
     }
-    async getFile(ruta, callback) {
+
+    async getFile(ruta) {
         let sql = `SELECT * FROM ARCHIVO where ruta="${ruta}"`;
-        let result = this.executeQuery(sql);
-        return result
+        let [file] =  await this.executeQuery(sql);
+        return file;
     }
-    
+
     async test2() {
-        const result = await this.executeQuery("SHOW TABLES")
-        return result;
+        return await this.executeQuery("SHOW TABLES")
     }
 }
-
 module.exports.DataBase = DataBase;
-
-
-
-
-
-let DB = DataBase.Instance()
-async function tester(){
-    //let res = await DB.insertRepo("peeaasdasdpo");
-    //console.log(res)
-}
-tester()
