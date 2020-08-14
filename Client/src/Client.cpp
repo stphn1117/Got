@@ -14,7 +14,7 @@ std::shared_ptr<Client> Client::getInstance()
     }
     return instance;
 }
-int Client::init(std::string repoName)
+int Client::init(std::string& repoName)
 {
     ce::debuglog(repoName);
     json req={{"name", repoName}};

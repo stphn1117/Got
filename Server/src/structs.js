@@ -1,10 +1,3 @@
-
-
-function commit(){
-
-}
-module.exports.commit
-
 function encodedFile(commitId,ruta,huffmanCode,huffmanTree){
 	this.commit = commitId;
 	this.ruta = ruta;

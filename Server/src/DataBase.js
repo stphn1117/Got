@@ -3,14 +3,12 @@ const util = require("util");
 const md5 = require("md5");
 const diff = require("diff");
 const structs = require("./structs.js")
-const compression = require("./Huffman");
 const { REPL_MODE_STRICT } = require("repl");
 
 class DataBase {
     static instance;
     static inst = false;
     mysql;
-    encoder;
     constructor() {
         if (DataBase.inst) { throw "too many instances" }
         DataBase.inst = true;
@@ -21,7 +19,6 @@ class DataBase {
             database: 'GOT',
             insecureAuth: true
         };
-        this.encoder = new compression.Huffman();
     }
     static Instance() {
         if (!this.instance) {
@@ -47,15 +44,13 @@ class DataBase {
         return this.executeQuery(sql)
     }
 
-    async insertArchivo(ruta, commit, contenido) {
-       
-        let contents = this.encoder.compress(contenido);
+    async insertArchivo(ruta, commit, huffman_code, huffman_table) {
         let sql = `INSERT INTO ARCHIVO (ruta, commit_id, huffman_code, huffman_tree)
-                    values ("${ruta}", ${commit}, "${contents.code}", "${contents.tabla}")`
+                    values ("${ruta}", ${commit}, "${huffman_code}", "${huffman_table}")`
         return await this.executeQuery(sql);
     }
 
-    async getFile(ruta, callback) {
+    async getFile(ruta) {
         let sql = `SELECT * FROM ARCHIVO where ruta="${ruta}"`;
         let [file] =  await this.executeQuery(sql);
         return file;
