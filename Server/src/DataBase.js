@@ -2,8 +2,6 @@ const mysql2 = require("mysql2/promise");
 const util = require("util");
 const md5 = require("md5");
 const diff = require("diff");
-const structs = require("./structs.js")
-const { REPL_MODE_STRICT } = require("repl");
 
 class DataBase {
     static instance;

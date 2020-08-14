@@ -5,18 +5,19 @@ const md5 = require("md5");
 
 class Commit{
     #isOpen;
-    #commitId;
+    #commitId=0;
     #encoder;
     constructor(){
         this.#encoder= new compressor.Huffman();
     }
     async open(repoId,parentCommit,mensaje){
         this.#isOpen = true;
-        this.commitId = md5(`${repoId}::${parentCommit}::${mensaje}::${Date.now()}`)
+        this.#commitId = md5(`${repoId}::${parentCommit}::${mensaje}::${Date.now()}`)
         await DB.insertCommit(this.commitId, repoId, parentCommit, mensaje);
     }
-    async close(){
+    close(){
         this.#isOpen = false;
+        return this.#commitId;
     }
     async insertArchivo(ruta, contenido){
         if(!this.#isOpen){throw "there's no open commit"}

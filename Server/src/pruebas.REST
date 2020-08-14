@@ -18,3 +18,9 @@ content-type: application/json
 
 
 ###
+GET http://localhost:3000/commitId
+content-type: application/json
+
+{
+    "name":"psssssop"
+}
