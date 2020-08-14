@@ -3,14 +3,17 @@
 #include <memory>
 #include <fstream>
 #include <sys/stat.h>
+#include <dirent.h>
 
 #include "include/utilities.hpp"
 #include "include/Interface.hpp"
 #include "include/Client.hpp"
+#include "include/list.hpp"
 //#include "include/dtl/dtl.hpp"
 //#include "dtl/dtl.hpp"
 
 #define BUZZ_SIZE 1024
+
 
 int dirFile;
 
@@ -32,21 +35,45 @@ void Interface::getCommand(int count, char **command){
 }
 
 void Interface::createFile(int count, char **command, int id){
-        char root[4] = "../";
 
-        //create directory
+        std::string files;
+        DIR *dp;
+        struct dirent *ep;     
+        dp = opendir ("./");
+        
+
+        if (dp != NULL)
+        {
+            /*
+            push_back();
+            */
+
+           
+            while (ep = readdir (dp))
+            puts (ep->d_name);
+
+
+            (void) closedir (dp);
+        }
+        else
+            perror ("Couldn't open the directory");
+
+
+
+        //find paths 
+
+
+        /*
         strcat(root,command[2]);
         ce::debuglog("Root Directory :", root);
         //dirFile = mkdir(root, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
-        std::ofstream file;
+       
+*/
 
         //create .gotignore
-        //char root2[30] = "../";
-        //std::string Root= "../";
+         std::ofstream file;
         std::string gotIgnore = "./.gotignore";
-        std::string myCom = command[2];
-        std::string fullRot = gotIgnore;
-        file.open(fullRot);
+        file.open(gotIgnore);
         file << "gotignore files";
         file.close();
         ce::log("project created");
