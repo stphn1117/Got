@@ -32,13 +32,14 @@ int Client::init(std::string& repoName)
     else
         return response["id"].get<int>();
 }
-int Client::commit(std::string message, json addFiles, json changeFiles)
+int Client::commit(std::string message)
 {
     //file data preparations 
     json metaData = getMetaData();
     json commitJson = { {"repo_id",metaData["id"].get<int>()},
                         {"message",message},
                         {"previous_commit",metaData["lastCommitId"].get<std::string>()} };
+    json addFiles = metaData["add"];
     json newFileList;
     for(auto file_route : addFiles){
         std::ifstream ifs(file_route.get<std::string>());
@@ -49,6 +50,7 @@ int Client::commit(std::string message, json addFiles, json changeFiles)
         newFileList.push_back(file);
     }
     json changedFileList;
+    json changeFiles= metaData["tracked"];;
     for(auto file_route : changeFiles){
         std::ifstream ifs(file_route.get<std::string>());
         std::string content((std::istreambuf_iterator<char>(ifs)),
@@ -61,7 +63,7 @@ int Client::commit(std::string message, json addFiles, json changeFiles)
     commitJson["changed_files"] = changedFileList;
 
     //cpr post 
-    auto res = cpr::Post(cpr::Url{url + "/init"},jsonHeader,cpr::Body{req.dump()});
+    auto res = cpr::Post(cpr::Url{url + "/init"},jsonHeader,cpr::Body{commitJson.dump()});
     json response = json::parse(res.text);
 
     metaData["lastCommitId"]= response["commit_id"].get<std::string>();
