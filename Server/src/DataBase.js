@@ -2,6 +2,7 @@ const mysql2 = require("mysql2/promise");
 const util = require("util");
 const md5 = require("md5");
 const diff = require("diff");
+const structs = require("./structs.js")
 const compression = require("./Huffman");
 const { REPL_MODE_STRICT } = require("repl");
 
@@ -40,9 +41,9 @@ class DataBase {
         return result.insertId;
     }
 
-    async insertCommit(repoId, parentCommit, mensaje, autor = "") {
-        let sql = `INSERT INTO COMMITS (rep_id, parent_commit, mensaje, autor)
-        VALUES (${repoId}, ${parentCommit}, ${mensaje}, "${autor}");`;
+    async insertCommit(id, repoId, parentCommit, mensaje, autor = "") {
+        let sql = `INSERT INTO COMMITS (id, rep_id, parent_commit, mensaje, autor)
+        VALUES (${id},${repoId}, ${parentCommit}, ${mensaje}, "${autor}");`;
         return this.executeQuery(sql)
     }
 
@@ -64,10 +65,8 @@ class DataBase {
         return await this.executeQuery("SHOW TABLES")
     }
 }
-
-
 module.exports.DataBase = DataBase;
-
+/*
 let DB = DataBase.Instance()
 async function tester() {
     let res = await DB.getFile("test.js");
@@ -75,3 +74,5 @@ async function tester() {
     console.log(res)
 }
 tester()
+
+*/

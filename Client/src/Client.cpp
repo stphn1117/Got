@@ -4,7 +4,7 @@ using namespace std;
 using json = nlohmann::json;
 
 void Client::init(std::string repo_name){
-    json output = {
+    json info = {
         {"name", repo_name}
     };
 

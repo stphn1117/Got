@@ -5,7 +5,7 @@
 //got--> init <name>, help, add[-A] [name], commit <message>, 
 //got-->status <file>, rollback <file> <commit>, reset <file>, sync <file>
 
-class Interface{
+class Interface{ 
     public:
     // user
         void getCommand(int count, char * theCom[]);

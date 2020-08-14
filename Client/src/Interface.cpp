@@ -17,7 +17,7 @@ void Interface::getCommand(int count, char **command){
     if(strcmp(command[1], "help") == 0) {
         printf(" instructions:\n\n init <name>\n\n add [-A] [name]\n\n commit <message>\n\n reset <file>\n\n sync<file>\n\n");
     }else if(strcmp(command[1], "init") == 0){
-        int id = 
+        
         createFile(count, command);
     }else if(strcmp(command[1], "commit") == 0){
         handleCommitFile();
