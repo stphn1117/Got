@@ -1,5 +1,5 @@
-#ifndef SPIRITTEMPLE_LIST_HPP
-#define SPIRITTEMPLE_LIST_HPP
+#ifndef LIST_HPP
+#define LIST_HPP
 
 #include <string>
 #include <iostream>

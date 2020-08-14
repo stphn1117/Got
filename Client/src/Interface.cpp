@@ -4,6 +4,7 @@
 #include <fstream>
 #include <sys/stat.h>
 #include <dirent.h>
+#include <filesystem>
 
 #include "include/utilities.hpp"
 #include "include/Interface.hpp"
@@ -21,8 +22,17 @@ void Interface::getCommand(int count, char **command){
     if(strcmp(command[1], "help") == 0) {
         ce::debuglog(" instructions:\n\n init <name>\n\n add [-A] [name]\n\n commit <message>\n\n reset <file>\n\n sync<file>\n\n");
     }else if(strcmp(command[1], "init") == 0){
+        if(std::filesystem::exists(".metadata.json")){
+            ce::log("there's an active repository in this folder");
+            return;
+        }
+        int id = Client::getInstance()->init(command[2]);
+        if(id!=-1){
+            createFile(count, command,id);
+        }else{
+            ce::log("choose another repository name!!!");
+        }
         
-        createFile(count, command,12);
     }else if(strcmp(command[1], "commit") == 0){
         handleCommitFile();
     }else if(strcmp(command[1], "rollback") == 0 || strcmp(command[1], "reset") == 0){
@@ -72,7 +82,7 @@ void Interface::createFile(int count, char **command, int id){
 
             
         json metadata;
-        metadata["id"]= 212;
+        metadata["id"]= id;
         metadata["repoName"]= command[2];
         metadata["tracked"] = filesTrack;
         

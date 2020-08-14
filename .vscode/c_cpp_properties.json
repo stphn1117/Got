@@ -4,13 +4,12 @@
             "name": "Linux",
             "includePath": [
                 "${workspaceFolder}/**",
-                "/usr/share/vcpkg/installed/**"
+                "/usr/share/vcpkg/**"
             ],
             "defines": [],
-            "compilerPath": "/usr/bin/gcc",
+            "compilerPath": "/usr/bin/g++",
             "cStandard": "c11",
-            "cppStandard": "gnu++17",
-            "intelliSenseMode": "clang-x64"
+            "cppStandard": "gnu++20"
         }
     ],
     "version": 4

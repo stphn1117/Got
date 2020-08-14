@@ -2,7 +2,7 @@ POST http://localhost:3000/init
 content-type: application/json
 
 {
-    "name":"popopo"
+    "name":"psssssop"
 }
 
 ###
