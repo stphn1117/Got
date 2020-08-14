@@ -20,7 +20,7 @@ public:
     static std::shared_ptr<Client> getInstance();
     int init(std::string& repo_name);
     void get(int files[], std::string specifyCommit, int Time);
-    int commit(std::string message, json addFiles, json changeFiles);
+    int commit(std::string message);
     int rollback();
     int reset();
     int sync();

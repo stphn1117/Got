@@ -34,6 +34,7 @@ int Client::init(std::string& repoName)
 }
 int Client::commit(std::string message, json addFiles, json changeFiles)
 {
+    //file data preparations 
     json metaData = getMetaData();
     json commitJson = { {"repo_id",metaData["id"].get<int>()},
                         {"message",message},
@@ -58,6 +59,12 @@ int Client::commit(std::string message, json addFiles, json changeFiles)
     }
     commitJson["add_files"] = newFileList;
     commitJson["changed_files"] = changedFileList;
+
+    //cpr post 
+    auto res = cpr::Post(cpr::Url{url + "/init"},jsonHeader,cpr::Body{req.dump()});
+    json response = json::parse(res.text);
+
+    metaData["lastCommitId"]= response["commit_id"].get<std::string>();
     return 0;
 
 }
