@@ -31,6 +31,7 @@ app.post('/init', async (req, res) => {
 
 
 })
+
 app.post('/commit/open', async (req, res) => {
     let id = req.body.repo_id;
     let mensaje = req.body.message;
@@ -39,27 +40,23 @@ app.post('/commit/open', async (req, res) => {
         if (commit.is_open()) { throw "unfinished commit in process" }
         let id = await commit.open(id, prevCommit, mensaje);
         req.status(200).json({
-            "status": "sucess"
+            "status": "sucess",
+            "commit_id": id
         })
-    } else {
-        res.status(400)
-    }
+    } else { res.status(400).json({ "status": "failed" }) }
 })
-app.post('/commit/add', async (req, res) => {
-    if(!commit.is_open()){res.status(300).json({"status":"failed"})}
-})
-app.post('/commit/change', async (req, res) => {
-    if(!commit.is_open()){res.status(300).json({"status":"failed"})}
-})
+
 app.get('/commit/close', async (req, res) => {
     let id = commit.close();
     if (commit.is_open()) {
         res.json({
             "commitId": id
         })
-    }else{
+    } else {
         res.json({
             "status": "failed"
         })
     }
 });
+
+app.get('/status')

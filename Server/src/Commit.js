@@ -14,6 +14,7 @@ class Commit{
         this.#isOpen = true;
         this.#commitId = md5(`${repoId}::${parentCommit}::${mensaje}::${Date.now()}`)
         await DB.insertCommit(this.commitId, repoId, parentCommit, mensaje);
+        return this.#commitId;
     }
     close(){
         this.#isOpen = false;

@@ -59,13 +59,3 @@ class DataBase {
     }
 }
 module.exports.DataBase = DataBase;
-/*
-let DB = DataBase.Instance()
-async function tester() {
-    let res = await DB.getFile("test.js");
-    res = DB.encoder.decompress(res.huffman_code, res.huffman_table)
-    console.log(res)
-}
-tester()
-
-*/
