@@ -49,7 +49,7 @@ void Interface::createFile(int count, char **command, int id){
         file.open(fullRot);
         file << "gotignore files";
         file.close();
-        printf("\n new project created \n");
+        ce::log("project created");
 
         //create metadata json
         std::ofstream metadataFile;
