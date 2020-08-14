@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const DB = require("./DataBase.js").DataBase.Instance();
 const commitAdmin = require("./Commit.js");
-let commit = new commitAdmin.Commit()
+let commit = new commitAdmin.Commit();
 
 app.use(express.json());
 app.listen(3000, () => console.log('listening at 3000'));
