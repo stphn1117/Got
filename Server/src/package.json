@@ -13,13 +13,11 @@
   "author": "José, Stephanie, Emanuel, Valeria",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.17.1",
-    "mysql2-promise": "0.1.4",
-    "body-parser": "1.19.0",
     "assert": "2.0.0",
     "diff": "4.0.2",
+    "express": "^4.17.1",
     "md5": "2.3.0",
-    "mysql": "^2.18.1",
+    "mysql2": "^2.1.0",
     "util": "^0.12.3"
   }
 }
