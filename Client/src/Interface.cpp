@@ -9,6 +9,7 @@
 #include "include/Interface.hpp"
 #include "include/Client.hpp"
 #include "include/list.hpp"
+#include "include/nlohmannJson.hpp"
 //#include "include/dtl/dtl.hpp"
 //#include "dtl/dtl.hpp"
 
@@ -36,39 +37,13 @@ void Interface::getCommand(int count, char **command){
 
 void Interface::createFile(int count, char **command, int id){
 
-        std::string files;
-        DIR *dp;
-        struct dirent *ep;     
-        dp = opendir ("./");
-        
-
-        if (dp != NULL)
-        {
-            /*
-            push_back();
-            */
-
-           
-            while (ep = readdir (dp))
-            puts (ep->d_name);
-
-
-            (void) closedir (dp);
-        }
-        else
-            perror ("Couldn't open the directory");
-
-
-
-        //find paths 
-
 
         /*
         strcat(root,command[2]);
         ce::debuglog("Root Directory :", root);
         //dirFile = mkdir(root, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
-       
-*/
+        */
+
 
         //create .gotignore
          std::ofstream file;
@@ -82,16 +57,32 @@ void Interface::createFile(int count, char **command, int id){
         std::ofstream metadataFile;
         std::string metaPath = "./.metadata.json";
         metadataFile.open(metaPath);
-        metadataFile.close();
-            
-
-        //check Id projects, create new id
-    
         
+        
+        //create files
+        std::string files;
+        DIR *dp;
+        struct dirent *ep;     
+        dp = opendir ("./");
+
+        nlohmann::json filesTrack;
+
+
+        if (dp != NULL)
+        {       
+            while (ep = readdir (dp))
+            //puts (ep->d_name);
+            filesTrack.push_back(ep->d_name);
+            (void) closedir (dp);
+        }
+        else
+            perror ("Couldn't open the directory");
+
+            
         json metadata;
         metadata["id"]= 212;
         metadata["repoName"]= command[2];
-        metadata["tracked"] ="";
+        metadata["tracked"] = filesTrack;
         
         metadataFile << metadata;
         metadataFile.close();
