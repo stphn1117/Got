@@ -14,14 +14,13 @@
 //#include "include/dtl/dtl.hpp"
 //#include "dtl/dtl.hpp"
 
-#define BUZZ_SIZE 1024
 
 
-int dirFile;
+
 
 void Interface::getCommand(int count, char **command){
     if(strcmp(command[1], "help") == 0) {
-        printf(" instructions:\n\n init <name>\n\n add [-A] [name]\n\n commit <message>\n\n reset <file>\n\n sync<file>\n\n");
+        ce::debuglog(" instructions:\n\n init <name>\n\n add [-A] [name]\n\n commit <message>\n\n reset <file>\n\n sync<file>\n\n");
     }else if(strcmp(command[1], "init") == 0){
         std::string repoName(command[2]);
         if(std::filesystem::exists(".metadata.json")){
@@ -38,7 +37,7 @@ void Interface::getCommand(int count, char **command){
     }else if(strcmp(command[1], "commit") == 0){
         handleCommitFile();
     }else if(strcmp(command[1], "rollback") == 0 || strcmp(command[1], "reset") == 0){
-        //back();
+        
     }else if(strcmp(command[1], "test") == 0){
         toClient(count, command);
     }else{
@@ -49,20 +48,13 @@ void Interface::getCommand(int count, char **command){
 void Interface::createFile(int count, char **command, int id){
 
 
-        /*
-        strcat(root,command[2]);
-        ce::debuglog("Root Directory :", root);
-        //dirFile = mkdir(root, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
-        */
-
-
         //create .gotignore
          std::ofstream file;
         std::string gotIgnore = "./.gotignore";
         file.open(gotIgnore);
         file << "gotignore files";
         file.close();
-        ce::log("project created");
+        ce::log("gotignore created");
 
         //create metadata json
         std::ofstream metadataFile;
@@ -70,7 +62,7 @@ void Interface::createFile(int count, char **command, int id){
         metadataFile.open(metaPath);
         
         
-        //create files
+        //update metadata
         std::string files;
         DIR *dp;
         struct dirent *ep;     
@@ -97,13 +89,12 @@ void Interface::createFile(int count, char **command, int id){
         
         metadataFile << metadata;
         metadataFile.close();
-        printf("\n new project created\n");
+        ce::log(" new project created");
+        
 }
 
 
 void Interface::handleCommitFile(){
-    //array de archivos
-        //read file
         std::ifstream file("../Got/miprueba.js");
         if(file.is_open())
         std::cout << file.rdbuf(); 
