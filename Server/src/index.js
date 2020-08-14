@@ -43,7 +43,7 @@ app.post('/commit', (req, res) => {
 })
 
 
-
+/*
 app.post('/api/repo/init', async (req, res) => {
     if(ereq.body.name){
         num++;
@@ -85,3 +85,4 @@ app.post('/api/repo/:id/commit', async (req, res) => {
     }
 });
 
+*/
