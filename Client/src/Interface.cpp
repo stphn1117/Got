@@ -20,6 +20,7 @@
 json metadata;
 nlohmann::json filesAdded;
 json TrackFiles(json filesToTrack);
+int testing();
 
 void Interface::getCommand(int count, char **command){
     if(strcmp(command[1], "help") == 0) {
@@ -31,7 +32,7 @@ void Interface::getCommand(int count, char **command){
     }else if(strcmp(command[1], "Add") == 0){
         handleAddFile(command);
     }else if(strcmp(command[1], "test") == 0){
-        toClient(count, command);
+        //testing();
     }else{
         ce::debuglog("the command isn't correct, execute help command");
         //ask to server
@@ -106,9 +107,9 @@ void Interface::handleAddFile(char **command){
     //nlohmann::json filesAdded;
     FILE *file;
 
-    if(strcmp(command[1], "All") == 0){
+    if(strcmp(command[2], "All") == 0){
 
-    //TrackFiles(filesAdded);
+    TrackFiles(filesAdded);
 
     }else{
 
@@ -116,6 +117,10 @@ void Interface::handleAddFile(char **command){
             fclose(file);
             filesAdded.push_back(command[2]);
             ce::log("file added");
+            //testing
+            for (json::iterator it = filesAdded.begin(); it != filesAdded.end(); ++it) {
+            std::cout << *it << '\n';
+            }
 
         } else {
             ce::log("file doesn't exist");
@@ -123,7 +128,6 @@ void Interface::handleAddFile(char **command){
 
     }
 }
-
 
 void Interface::toClient(int count, char **commands){
 }
