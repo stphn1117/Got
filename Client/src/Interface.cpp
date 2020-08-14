@@ -154,5 +154,5 @@ void Interface::toClient(int count, char **commands){
     perror ("");
     }
 
-    sending.send(command, files, "mi commit", " commit 5, especificación" );
+    //sending.send(command, files, "mi commit", " commit 5, especificación" );
 }
