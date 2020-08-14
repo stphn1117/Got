@@ -2,7 +2,7 @@ const bodyParser = require("body-parser");
 const express = require('express');
 const md5 = require("md5");
 const app = express();
-const DB = require("./DataBase.js")
+const DB = require("./DataBase.js").DataBase.Instance();
 app.use(express.json());
 app.listen(3000, () => console.log('listening at 3000'));
 
@@ -10,14 +10,25 @@ app.get('/api', (resquest, response) => {
     console.log(request.body);
     response.send("SERVER GEres.status(400).send(object);T");
 });
-app.post('/init', (req, res)=>{
+app.post('/init', async (req, res)=>{
+    console.log(req.body)
     if(req.body.name){
-        res.json({
-            "state":"sucess"
+        DB.insertRepo(req.body.name)
+        .then((id)=>{
+            res.status(200).json({
+                "status":"sucess",
+                "id": id
+            });
         })
+        .catch((err)=>{
+            res.status(400).json({
+                "status":"failed"
+            })
+        })
+        
     }else{
         res.status(400).json({
-            "state":"failed"
+            "status":"failed"
         })
     }
 

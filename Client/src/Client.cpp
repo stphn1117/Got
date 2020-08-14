@@ -1,31 +1,45 @@
 #include "include/Client.hpp"
-#include <iostream>
+#include "include/nlohmannJson.hpp"
+#include <memory>
+#include <cpr/cpr.h>
+#include "include/utilities.hpp"
+using json = nlohmann::json;
 
-std::shared_ptr<Client> Client::instance  = nullptr;
-std::shared_ptr<Client> Client::getInstance(){
-    if(instance == nullptr){
+std::shared_ptr<Client> Client::instance = nullptr;
+std::shared_ptr<Client> Client::getInstance()
+{
+    if (instance == nullptr)
+    {
         instance = std::shared_ptr<Client>(new Client());
     }
     return instance;
 }
-
-
-/*
-using json = nlohmann::json;
-
-int Client::init(std::string& repo_name){
-    json info = {
-        {"name", repo_name}
-    }
-    cpr::Response res = cpr::Post(
-        cpr::Url{"http://localhost:300/init"},
+int Client::init(std::string repoName)
+{
+    ce::debuglog(repoName);
+    json req={{"name", repoName}};
+    ce::debuglog(req.dump());
+    auto res = cpr::Post(
+        cpr::Url{url + "/init"},
         cpr::Header{{"Content-Type", "application/json"}},
-        cpr::Body{output.dump()}
-    );
+        cpr::Body{req.dump()});
 
-    std::cout<<res.text<<std::endl;
+    json response = json::parse(res.text);
+    if (response["status"].get<std::string>() == "failed")
+    {
+        return -1;
+    }
+    else
+    {
+        return response["id"].get<int>();
+    }
 }
+int Client::commit(int repoId, std::string message, json addFiles, json changeFiles)
+{
 
+    return 0;
+}
+/*
 void Client::commit(int repo_id, std::string author, std::string messageCommit, json files){
     /*json output = {
         {"repo_id", repo_id},
