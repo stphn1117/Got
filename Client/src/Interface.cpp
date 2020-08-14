@@ -17,6 +17,7 @@ void Interface::getCommand(int count, char **command){
     if(strcmp(command[1], "help") == 0) {
         printf(" instructions:\n\n init <name>\n\n add [-A] [name]\n\n commit <message>\n\n reset <file>\n\n sync<file>\n\n");
     }else if(strcmp(command[1], "init") == 0){
+        int id = 
         createFile(count, command);
     }else if(strcmp(command[1], "commit") == 0){
         handleCommitFile();
@@ -36,15 +37,15 @@ void Interface::createFile(int count, char **command){
         //create directory
         strcat(root,command[2]);
         cout<< "Root Directory : " << root << "\n";
-        dirFile = mkdir(root, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+        //dirFile = mkdir(root, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
         ofstream file;
 
         //create .gotignore
-        char root2[30] = "../";
-        std::string Root= "../";
-        std::string gotIgnore = "/.gotignore";
+        //char root2[30] = "../";
+        //std::string Root= "../";
+        std::string gotIgnore = "./.gotignore";
         std::string myCom = command[2];
-        std::string fullRot = Root + myCom + gotIgnore;
+        std::string fullRot = gotIgnore;
         file.open(fullRot);
         file << "gotignore files";
         file.close();
@@ -52,8 +53,8 @@ void Interface::createFile(int count, char **command){
 
         //create metadata json
         ofstream metadataFile;
-        std::string metadataJ = "/.metadata.json";
-        std::string metaPath = Root + myCom + metadataJ;
+        std::string metadataJ = "./.metadata.json";
+        std::string metaPath = metadataJ;
         metadataFile.open(metaPath);
 
         vector<string> files;
