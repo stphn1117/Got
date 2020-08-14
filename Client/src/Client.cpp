@@ -22,11 +22,22 @@ std::shared_ptr<Client> Client::getInstance()
  *
  * @return json Ultimo commit
  */
-json Client::getMetaData(){
+json Client::getMetaData()
+{
     std::ifstream ifs("./.metadata.json");
     json metadata;
     ifs >> metadata;
     return metadata["lastCommit"].get<std::string>();
+}
+int Client::overwriteMetaData(json newData){
+    std::ofstream output;
+    output.open("./.metadata.json");
+    if (output.is_open())
+    {
+        output << newData;
+    }
+    output.close();
+    return 0;
 }
 
 /**
@@ -35,7 +46,7 @@ json Client::getMetaData(){
  * @param repoName Nombre del nuevo repositorio
  * @return int Estado de la operacion del cliente
  */
-int Client::init(std::string& repoName)
+int Client::init(std::string &repoName)
 {
     json req = {{"name", repoName}};
     auto res = cpr::Post(cpr::Url{url + "/init"}, jsonHeader, cpr::Body{req.dump()});
@@ -45,12 +56,13 @@ int Client::init(std::string& repoName)
     else
         return response["id"].get<int>();
 }
-int Client::commit(std::string message)
+int Client::commit(std::string& message)
 {
-    //file data preparations
     json metaData = getMetaData();
+
     json addFiles = metaData["add"];
     json changeFiles = metaData["tracked"];
+
     json newFileList;
     json changedFileList;
     for (auto file_route : addFiles)
@@ -74,22 +86,25 @@ int Client::commit(std::string message)
 
     json commitJson = {{"repo_id", metaData["id"].get<int>()},
                        {"message", message},
-                       {"previous_commit", metaData["lastCommitId"].get<std::string>()}.
-                       {"add_files",newFileList},
-                       {"changed_files",changedFileList}};
+                       {"previous_commit", metaData["lastCommitId"].get<std::string>()}.{"add_files", newFileList},
+                       {"changed_files", changedFileList}};
 
     //cpr post
     auto res = cpr::Post(cpr::Url{url + "/commit"}, jsonHeader, cpr::Body{commitJson.dump()});
     json response = json::parse(res.text);
     metaData["lastCommitId"] = response["commit_id"].get<std::string>();
-
-
-
-
+    overwriteMetaData(metaData);
     return 0;
 }
 
-int Client::rollback()
+int Client::rollback(std::string route, std::string commit)
+    json req = {
+        {"file_route", route},
+        {"commitid", commit},
+    }
+    auto res = cpr::Post(cpr::Url{url + "/rollback"}, jsonHeader, cpr::Body{commitJson.dump()});
+    json response = json::parse(res.text);
+
 {
 }
 int Client::reset()
