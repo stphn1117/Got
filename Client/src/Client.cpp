@@ -1,15 +1,24 @@
-#include "include/Client.h"
+#include "include/Client.hpp"
 #include <iostream>
-using namespace std;
+
+std::shared_ptr<Client> Client::instance  = nullptr;
+std::shared_ptr<Client> Client::getInstance(){
+    if(instance == nullptr){
+        instance = std::shared_ptr<Client>(new Client());
+    }
+    return instance;
+}
+
+
+/*
 using json = nlohmann::json;
 
-void Client::init(std::string repo_name){
+int Client::init(std::string& repo_name){
     json info = {
         {"name", repo_name}
-    };
-
+    }
     cpr::Response res = cpr::Post(
-        cpr::Url{"http://localhost:3001/api/repo/init"},
+        cpr::Url{"http://localhost:300/init"},
         cpr::Header{{"Content-Type", "application/json"}},
         cpr::Body{output.dump()}
     );
@@ -17,12 +26,8 @@ void Client::init(std::string repo_name){
     std::cout<<res.text<<std::endl;
 }
 
-void Client::commit(int repo_id, std::string messageCommit, json files){
-    //json files example
-    /*
-        json files = {{"src/main.cpp", "Hello world"}, {"resources/datas.txt", ""}}
-    */
-    json output = {
+void Client::commit(int repo_id, std::string author, std::string messageCommit, json files){
+    /*json output = {
         {"repo_id", repo_id},
         {"messageCommit", messageCommit},
         {"files", files}        
@@ -40,9 +45,6 @@ void Client::commit(int repo_id, std::string messageCommit, json files){
 
 void Client::get(int repo_id, int commit_id, json file, std::string command){
     //json file example
-    /*
-        json file = {"src/main.cpp", "Hello world"}
-    */
     json output = {
         {"repo_id", repo_id},
         {"commit_id", commit_id},
@@ -63,6 +65,4 @@ void Client::get(int repo_id, int commit_id, json file, std::string command){
         cpr::Header{{"Content-Type", "application/json"}},
         cpr::Body{output.dump()}
     );
-
-    std::cout<<res.text<<std::endl;
-}
+}*/

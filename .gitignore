@@ -2,4 +2,5 @@
 Server/src/node_modules
 Server/src/package-lock.json
 Client/build
+Client/.idea
 .vscode/settings.json

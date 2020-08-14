@@ -1,16 +1,17 @@
 #include <iostream>
 #include <string.h>
+#include <memory>
 #include <fstream>
 #include <sys/stat.h>
-#include <dirent.h>
-#include "include/Inteface.h"
-#include "include/Client.h"
+
+#include "include/utilities.hpp"
+#include "include/Interface.hpp"
+#include "include/Client.hpp"
 //#include "include/dtl/dtl.hpp"
 //#include "dtl/dtl.hpp"
 
 #define BUZZ_SIZE 1024
 
-using namespace std;
 int dirFile;
 
 void Interface::getCommand(int count, char **command){
@@ -18,7 +19,7 @@ void Interface::getCommand(int count, char **command){
         printf(" instructions:\n\n init <name>\n\n add [-A] [name]\n\n commit <message>\n\n reset <file>\n\n sync<file>\n\n");
     }else if(strcmp(command[1], "init") == 0){
         
-        createFile(count, command);
+        createFile(count, command,12);
     }else if(strcmp(command[1], "commit") == 0){
         handleCommitFile();
     }else if(strcmp(command[1], "rollback") == 0 || strcmp(command[1], "reset") == 0){
@@ -30,15 +31,14 @@ void Interface::getCommand(int count, char **command){
     }
 }
 
-
-void Interface::createFile(int count, char **command){
+void Interface::createFile(int count, char **command, int id){
         char root[4] = "../";
 
         //create directory
         strcat(root,command[2]);
-        cout<< "Root Directory : " << root << "\n";
+        ce::debuglog("Root Directory :", root);
         //dirFile = mkdir(root, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
-        ofstream file;
+        std::ofstream file;
 
         //create .gotignore
         //char root2[30] = "../";
@@ -52,73 +52,23 @@ void Interface::createFile(int count, char **command){
         printf("\n new project created \n");
 
         //create metadata json
-        ofstream metadataFile;
-        std::string metadataJ = "./.metadata.json";
-        std::string metaPath = metadataJ;
+        std::ofstream metadataFile;
+        std::string metaPath = "./.metadata.json";
         metadataFile.open(metaPath);
-
-        vector<string> files;
-        DIR *dir;
-        struct dirent *ent;
-        if ((dir = opendir ("../Got")) != NULL) {
-
-        //select files and directories within directory 
-        while ((ent = readdir (dir)) != NULL) {
-                files.push_back(ent->d_name);
-                }
-                    closedir (dir);
-                }else {
-                    perror ("");
-                }
+        metadataFile.close();
             
 
         //check Id projects, create new id
-        
-
-        char idProject;
-        fstream idFile;
-        idFile.open ("../manage.got", ios::in);
-        std::cout << idFile.rdbuf();
-
-        if (idFile.is_open()) {
-            idFile.seekp(0,ios::end);
-            size_t size = idFile.tellg();
-
-            if( size == 0){   
-                idFile << 1;
-            }else{
-                while (! idFile.eof() ) {
-                        idFile >> idProject;
-                        //cout << idProject << " ";
-                        }
-                int id = idProject;
-                idFile << idProject++;
-                idFile.close();
-            }
-        }
-        cout << "Fichero manage.got inexistente" << endl;
+    
         
         json metadata;
-        metadata["id"]= idProject;
+        metadata["id"]= 212;
         metadata["repoName"]= command[2];
-        metadata["tracked"] = files;
+        metadata["tracked"] ="";
         
         metadataFile << metadata;
         metadataFile.close();
         printf("\n new project created\n");
-
-        // sending name proyect and metadata to server
-        std::ifstream inFile;
-        inFile.open("../Got/.metadata.json");
-        std::stringstream strStream;
-        strStream << inFile.rdbuf(); //read the file
-        std::string str = strStream.str();
-        //string beta = fileMeta.rdbuf();
-/*
-        string str = "hola";
-        Client c;
-        c.init(command[2], str);
-        */
 }
 
 
@@ -132,27 +82,4 @@ void Interface::handleCommitFile(){
 
 
 void Interface::toClient(int count, char **commands){
-    Client sending;
-    vector<string> files; 
-    vector<string> command;
-    for (int i = 0; i < count; i++){ 
-        cout << commands[i] << "\n";
-        command.push_back(commands[i]);
-    }
-    
-
-    DIR *dir;
-    struct dirent *ent;
-    if ((dir = opendir ("../Got")) != NULL) {
-    //select files and directories within directory 
-    while ((ent = readdir (dir)) != NULL) {
-        files.push_back(ent->d_name);
-    }
-    closedir (dir);
-    } else {
-    //could not open directory
-    perror ("");
-    }
-
-    //sending.send(command, files, "mi commit", " commit 5, especificación" );
 }
