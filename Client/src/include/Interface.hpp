@@ -17,7 +17,6 @@ class Interface{
         void createProject(int count, char * theCom[], int id);
         void handleCommitFile();
         void handleAddFile(char * thecom[]);
-        void addFiles();
         void back(char * theCom[]);
     
 };
