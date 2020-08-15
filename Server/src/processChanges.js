@@ -3,14 +3,11 @@ const diff = require("diff");
 function getDiff(fileName, oldText, newText){
     let jsdiff = diff.createPatch(fileName, oldText, newText);
     let parsedPatch = diff.parsePatch(jsdiff);
-    let parsedStringify = JSON.stringify(parsedPatch);
-    let diffEncoded = encode(parsedStringify);
-    return diffEncoded;
+    return JSON.stringify(parsedPatch);
 }
 
 function applyDiff(text, patch){
-    let diffDecode = decode(patch);
-    let normalPatch = JSON.parse(diffDecode);
+    let normalPatch = JSON.parse(patch);
     text = diff.applyPatch(text, normalPatch);
     return text;
 }
