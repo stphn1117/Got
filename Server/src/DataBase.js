@@ -1,4 +1,6 @@
 const mysql2 = require("mysql2/promise");
+const processChanges = require("./processChanges.js")
+const compressor = require("./Huffman")
 const util = require("util");
 const md5 = require("md5");
 const diff = require("diff");
@@ -10,6 +12,7 @@ class DataBase {
     static instance;
     static inst = false;
     mysql;
+    #encoder = null;
 
     /**
      * Representa un objeto de tipo DabaBase
@@ -17,6 +20,7 @@ class DataBase {
      */
     constructor() {
         if (DataBase.inst) { throw "too many instances" }
+        this.#encoder= new compressor.Huffman();
         DataBase.inst = true;
         this.mysql = {
             host: 'localhost',
@@ -81,7 +85,7 @@ class DataBase {
      * @param {string} huffman_table - Tabla de codigos de Huffman de los caracteres en el archivo
      */
     async insertArchivo(ruta, commit, huffman_code, huffman_table) {
-        let sql = `INSERT INTO ARCHIVO (ruta, commit_id, huffman_code, huffman_tree)
+        let sql = `INSERT INTO ARCHIVO (ruta, commit_id, huffman_code, huffman_table)
                     values ("${ruta}", ${commit}, "${huffman_code}", "${huffman_table}")`
         return await this.executeQuery(sql);
     }
@@ -97,17 +101,21 @@ class DataBase {
     }
 
     /**
-     * Obtiene los diffs del archivo especificado
+     * Obtiene los diffs del archivo especifico, y el texto inicial de dicho archivo
      * @param {string} ruta ruta del archivo en el cliente 
      * @param {string} commit id del commit hasta el cual se quiere recuperar el archivo
      */
-    async getDiffs(ruta, commit = null) {
+    async getFileDiffs(ruta, commit = null) {
         let file = await this.getFile(ruta);
         let sql = `SELECT * FROM DIFF WHERE archivo ='${file.id}' ORDER BY id`;
         let diffs = await this.executeQuery(sql)
-        let returnVal;
+        
+        let returnVal={
+            content: this.#encoder.decompress(file.huffman_code, file.huffman_table),
+            changes:[]
+        };
         if (!commit) {
-            returnVal = diffs;
+            returnVal.changes = diffs;
         } else {
             let toApply = []
             let endfor = false;
@@ -119,9 +127,18 @@ class DataBase {
                     toApply.push(element);
                 }
             });
-            returnVal = toApply
+            returnVal.changes = toApply
         }
         return returnVal;
+    }
+    async getFileState(ruta, commit=null){
+        let rawFile = await this.getFileDiffs(ruta, commit);
+        let finalContent = rawFile.content;
+        //esto debería poder retornar el archivo hasta el estado que se solicita
+        rawFile.changes.forEach((change)=>{
+            processChanges.applyDiff(finalContent,change)
+        })
+        return finalContent;
     }
 }
 module.exports.DataBase = DataBase;

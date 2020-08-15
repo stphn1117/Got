@@ -59,7 +59,6 @@ int Client::init(std::string &repoName)
 int Client::commit(std::string& message)
 {
     json metaData = getMetaData();
-
     json addFiles = metaData["add"];
     json changeFiles = metaData["tracked"];
 
@@ -93,6 +92,10 @@ int Client::commit(std::string& message)
     //cpr post
     auto res = cpr::Post(cpr::Url{url + "/commit"}, jsonHeader, cpr::Body{commitJson.dump()});
     json response = json::parse(res.text);
+    for(auto file : newFileList){
+        changedFileList.push_back(file);
+    }
+    metaData["tracked"] = changedFileList;
     metaData["lastCommitId"] = response["commit_id"].get<std::string>();
     overwriteMetaData(metaData);
     return 0;

@@ -43,13 +43,12 @@ app.post('/commit', async (req, res) => {
         if (commit.is_open()) { throw "unfinished commit in process" }
         let id = await commit.open(id, prevCommit, mensaje);
         if (addFiles) {
-            addFiles.forEach(element => {
-                commit.insertArchivo(element.ruta)
+            addFiles.forEach(file => {
+                commit.insertArchivo(file.route,file.contents)
             });
         }
         if (changes) {
-            changes.forEach(file => {
-                console.log(file);
+            changes.forEach(async (file)=> {
                 let patch = processChanges.getDiff(file.route, file.contents)
                 await commit.insertChange();
             })

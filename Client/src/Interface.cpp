@@ -29,7 +29,9 @@ void Interface::getCommand(int count, char **command){
     if(strcmp(command[1], "help") == 0) {
         ce::debuglog(" instructions:\n\n init <name>\n\n add [-A] [name]\n\n commit <message>\n\n reset <file>\n\n sync<file>\n\n");
     }else if(strcmp(command[1], "init") == 0){
-            createProject(count, command,4);
+            std::string repoName(command[2]);
+            int id = Client::getInstance()->init(repoName);
+            createProject(count, command,id);
     }else if(strcmp(command[1], "Add") == 0){
         handleAddFile(command);
     }else{
@@ -66,15 +68,12 @@ void Interface::createProject(int count, char **command, int id){
         struct dirent *ep;     
         dp = opendir ("./");
         nlohmann::json filesTrack;
-        metadata["id"]= id;
-        metadata["repoName"]= command[2];
+        metadata["id"] = id;
+        metadata["repoName"] = command[2];
         metadata["tracked"] = TrackFiles(filesTrack);
         metadataFile << metadata;
         metadataFile.close();
         ce::log(" new project created");
-
-       
-            
         
 }
 
