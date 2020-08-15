@@ -153,7 +153,7 @@ class Huffman {
      * @param {JSON} charCodes - codigos de los caracteres 
      */
     decompress(textCode, charCodes) {
-        charCodes = JSON.parse(charCodes.replace("sq", "'").replace("sq","\""));
+        charCodes = JSON.parse(charCodes.replace("sq", "'").replace("dq","\"").replace("jump", "\n"));
         this.generateTreeByCode(charCodes);
         //this.HuffmanTree.print();
         var text = this.HuffmanTree.readTreeByCode(textCode);

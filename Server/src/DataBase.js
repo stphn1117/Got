@@ -71,7 +71,7 @@ class DataBase {
      */
     async insertCommit(id, repoId, parentCommit, mensaje, autor = "") {
         let sql = `INSERT INTO COMMITS (id, rep_id, parent_commit, mensaje, autor)
-                    VALUES ('${id}',${repoId}, '${parentCommit}', '${mensaje}', "${autor}");`;
+                    VALUES ('${id}',${repoId}, '${parentCommit}', '${mensaje}', "${autor}")`;
         let updateHead = `UPDATE REPOSITORIO SET head = "${id}" WHERE id=${repoId}`
         this.executeQuery(sql);
         this.executeQuery(updateHead);
@@ -88,12 +88,13 @@ class DataBase {
     async insertArchivo(ruta, commit, huffman_code, huffman_table) {
         console.log(commit)
         let sql = `INSERT INTO ARCHIVO (ruta, commit_id, huffman_code, huffman_table)
-                    values ('${ruta}', '${commit}', '${huffman_code}', '${huffman_table}')`
+                    values ("${ruta}", "${commit}", '${huffman_code}', '${huffman_table}')`
         return await this.executeQuery(sql);
     }
     async insertDiff(commit, ruta, change, newText) {
+        let file = await this.getFile(ruta);
         let sql = `INSERT INTO DIFF (commit_id, archivo, diff_output, md5)
-                    VALUES ("${commit}","${ruta}",'${change}','${md5(newText)}')`
+                    VALUES ("${commit}","${file.id}",'${change}','${md5(newText)}')`
         return await this.executeQuery(sql);
     }
 

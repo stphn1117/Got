@@ -47,29 +47,29 @@ class Tree {
             return
 
         } else if (!node.right && !node.left) {
-            console.log("ROOT: " + node.value);
-            console.log("LEFT: null");
-            console.log("RIGHT: null\n");
+            ////console.log("ROOT: " + node.value);
+            //////console.log("LEFT: null");
+            ////console.log("RIGHT: null\n");
 
         } else if (!node.right) {
-            console.log("ROOT: " + node.value);
-            console.log("LEFT: " + node.left.value);
-            console.log("RIGHT: null\n");
+            ////console.log("ROOT: " + node.value);
+            ////console.log("LEFT: " + node.left.value);
+            ////console.log("RIGHT: null\n");
             this.print(node.left);
 
         } else if (!node.left) {
-            console.log("ROOT: " + node.value);
-            console.log("LEFT: null");
-            console.log("RIGHT: " + node.right.value + "\n");
+            ////console.log("ROOT: " + node.value);
+            ////console.log("LEFT: null");
+            ////console.log("RIGHT: " + node.right.value + "\n");
             this.print(node.right);
 
         } else {
             if (node.prev) {
-                console.log("PREV: " + node.prev.value);
+                ////console.log("PREV: " + node.prev.value);
             }
-            console.log("ROOT: " + node.value);
-            console.log("LEFT: " + node.left.value);
-            console.log("RIGHT: " + node.right.value + "\n");
+            ////console.log("ROOT: " + node.value);
+            ////console.log("LEFT: " + node.left.value);
+            ////console.log("RIGHT: " + node.right.value + "\n");
             this.print(node.left);
             this.print(node.right);
         }

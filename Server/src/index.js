@@ -52,14 +52,18 @@ app.post('/commit', async (req, res) => {
         if (addFiles) {
             if (addFiles.lenght != 0) {
                 addFiles.forEach(async (file) => {
-                    await commit.insertArchivo(file.route, file.contents)
+                    if (file.route != "./metadata.json") {
+                        await commit.insertArchivo(file.route, file.contents)
+                    }
                 })
             }
         }
         if (changed) {
             if (changed.lenght != 0) {
                 changed.forEach(async (file) => {
-                    await commit.insertChange(file.route, file.contents);
+                    if (file.route != "./metadata.json") {
+                        await commit.insertChange(file.route, file.contents);
+                    }
                 })
             }
         }
