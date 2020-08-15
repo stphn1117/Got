@@ -62,8 +62,8 @@ int Client::commit(std::string& message)
     json addFiles = metaData["add"];
     json changeFiles = metaData["tracked"];
 
-    json newFileList;
-    json changedFileList;
+    json newFileList = new json::array();
+    json changedFileList = new json::array();
     for (auto file_route : addFiles)
     {
         std::ifstream ifs(file_route.get<std::string>());
@@ -101,14 +101,20 @@ int Client::commit(std::string& message)
     return 0;
 }
 
-int Client::rollback(std::string route, std::string commit)
+int Client::rollback(std::string& route, std::string& commit)
 {
-    json req = {
-        {"file_route", route},
-        {"commitid", commit},
-    };
-    auto res = cpr::Post(cpr::Url{url + "/rollback"}, jsonHeader, cpr::Body{req.dump()});
+    json req = {{"file_route", route},
+                {"commit_id", commit}};
+    auto res = cpr::Get(cpr::Url{url + "/rollback"}, jsonHeader, cpr::Body{req.dump()});
     json response = json::parse(res.text);
+    std::ofstream output;
+    output.open(route);
+    if (output.is_open())
+    {
+        output << response["content"];
+    }
+    output.close();
+    return 0;
     return 0;
 }
 int Client::reset()

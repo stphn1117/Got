@@ -14,19 +14,19 @@ app.post('/init', async (req, res) => {
         DB.insertRepo(req.body.name)
             .then((id) => {
                 res.status(200).json({
-                    "status": "sucess",
-                    "id": id
+                    status: "sucess",
+                    id: id
                 });
             })
             .catch((err) => {
                 res.status(400).json({
-                    "status": "failed"
+                    status: "failed"
                 })
             })
 
     } else {
         res.status(400).json({
-            "status": "failed"
+            status: "failed"
         })
     }
 
@@ -39,6 +39,11 @@ app.post('/commit', async (req, res) => {
     let prevCommit = req.body.previous_commit;
     let changed = req.body.add_files;
     let addFiles = req.body.changed_files;
+    if (!commit.checkIfLast(prevCommit)){
+        res.status(400).json({
+            status:"outdated"
+        })
+    }
     if (id && mensaje && prevCommit) {
         if (commit.is_open()) { throw "unfinished commit in process" }
         let id = await commit.open(id, prevCommit, mensaje);
@@ -55,15 +60,25 @@ app.post('/commit', async (req, res) => {
         }
         
         req.status(200).json({
-            "status": "sucess",
-            "commit_id": id
+            status: "sucess",
+            commit_id: id
         })
     } else { res.status(400).json({ "status": "failed" }) }
 })
 
 
 app.get('/rollback', async (req, res) => {
-
+    let file = req.body.file_route;
+    let commit = req.body.commit_id;
+    let check = await DB.checkFileExists(file);
+    if(!check){
+        res.status(400).json({
+            status:"failed"
+        })
+    }
+    let contents = await DB.getFileState(file, commit)
+    res.json({route: file,
+            content : contents})
 })
 
 app.get('/status', async (req, res) => {

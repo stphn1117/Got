@@ -2,6 +2,6 @@
     "id": 1,
     "lastCommitId":0,
     "nombre":"sadasd",
-    "tracked":["folder1/ff.cc", "./golfdsf/fd.js", ....],
-    "add":[]
+    "tracked":["folder1/ff.cc", "./golfdsf/fd.js", "subdir/kr.js"],
+    "add":[""]
 }

@@ -89,6 +89,11 @@ class DataBase {
                     values ("${ruta}", ${commit}, "${huffman_code}", "${huffman_table}")`
         return await this.executeQuery(sql);
     }
+    async insertDiff(commit, ruta, change, newText) {
+        let sql = `INSERT INTO DIFF (commit_id, archivo, diff_output, md5)
+                    VALUES ("${commit}",${ruta},"${change}","${md5(newText)}")`
+        return await this.executeQuery(sql);
+    }
 
     /**
      * Obtiene un archivo seleccionado de la tabla ARCHIVO 
@@ -136,15 +141,40 @@ class DataBase {
         let finalContent = rawFile.content;
         //esto debería poder retornar el archivo hasta el estado que se solicita
         rawFile.changes.forEach((change)=>{
-            processChanges.applyDiff(finalContent,change)
+            processChanges.applyDiff(finalContent,JSON.parse(change));
         })
         return finalContent;
     }
+    async checkFileExists(ruta){
+        let sql = `SELECT * FROM ARCHIVOS WHERE ruta='${ruta}'`
+        let val = []; 
+        val = await this.executeQuery(sql);
+        if(val.length == 0){
+            console.log("file does not exists")
+            return false;
+        }else{
+            console.log("file exists")
+            return true;
+        }
+    }
+    async checkIfIsLastCommit(commit){
+        let sql = `SELECT * FROM COMMITS WHERE parent_commit='${commit}'`
+        let val = []; 
+        val = await this.executeQuery(sql);
+        if(val.length == 0){
+            console.log("is last commit")
+            return true;
+        }else{
+            console.log("is not last commit")
+            return false;
+        }
+    }
 }
 module.exports.DataBase = DataBase;
-/*
+
 let a = DataBase.Instance();
-async function test() {
+//a.checkIfIsLastCommit("123")
+/*async function test() {
     let f = await a.getDiffs("test.js")
 }
 test()
