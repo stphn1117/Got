@@ -6,8 +6,7 @@ class Node {
     /**
      * Representa un objeto de tipo Node
      * @constructor
-     * @param {char} value - Valor que guarda el nodo en el arbol de descompresion
-     * @param {Array.<Array.<number,char>>} value - Valor que guarda el nodo en el arbol de compresion
+     * @param {Array.<Array.<number,char>> | char} value - Valor que guarda el nodo 
      */
     constructor(value) {
         this.value = value
