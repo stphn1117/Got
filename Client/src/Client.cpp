@@ -27,7 +27,7 @@ json Client::getMetaData()
     std::ifstream ifs("./.metadata.json");
     json metadata;
     ifs >> metadata;
-    return metadata["lastCommit"].get<std::string>();
+    return metadata;
 }
 int Client::overwriteMetaData(json newData){
     std::ofstream output;
@@ -59,7 +59,6 @@ int Client::init(std::string &repoName)
 int Client::commit(std::string& message)
 {
     json metaData = getMetaData();
-
     json addFiles = metaData["add"];
     json changeFiles = metaData["tracked"];
 
@@ -86,30 +85,37 @@ int Client::commit(std::string& message)
 
     json commitJson = {{"repo_id", metaData["id"].get<int>()},
                        {"message", message},
-                       {"previous_commit", metaData["lastCommitId"].get<std::string>()}.{"add_files", newFileList},
+                       {"previous_commit", metaData["lastCommitId"].get<std::string>()},
+                       {"add_files", newFileList},
                        {"changed_files", changedFileList}};
 
     //cpr post
     auto res = cpr::Post(cpr::Url{url + "/commit"}, jsonHeader, cpr::Body{commitJson.dump()});
     json response = json::parse(res.text);
+    for(auto file : newFileList){
+        changedFileList.push_back(file);
+    }
+    metaData["tracked"] = changedFileList;
     metaData["lastCommitId"] = response["commit_id"].get<std::string>();
     overwriteMetaData(metaData);
     return 0;
 }
 
 int Client::rollback(std::string route, std::string commit)
+{
     json req = {
         {"file_route", route},
         {"commitid", commit},
-    }
-    auto res = cpr::Post(cpr::Url{url + "/rollback"}, jsonHeader, cpr::Body{commitJson.dump()});
+    };
+    auto res = cpr::Post(cpr::Url{url + "/rollback"}, jsonHeader, cpr::Body{req.dump()});
     json response = json::parse(res.text);
-
-{
+    return 0;
 }
 int Client::reset()
 {
+    return 0;
 }
 int Client::sync()
 {
+    return 0;
 }

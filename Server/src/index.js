@@ -33,7 +33,7 @@ app.post('/init', async (req, res) => {
 
 })
 
-app.post('/commit/open', async (req, res) => {
+app.post('/commit', async (req, res) => {
     let id = req.body.repo_id;
     let mensaje = req.body.message;
     let prevCommit = req.body.previous_commit;
@@ -42,19 +42,18 @@ app.post('/commit/open', async (req, res) => {
     if (id && mensaje && prevCommit) {
         if (commit.is_open()) { throw "unfinished commit in process" }
         let id = await commit.open(id, prevCommit, mensaje);
-
+        if (addFiles) {
+            addFiles.forEach(file => {
+                commit.insertArchivo(file.route,file.contents)
+            });
+        }
         if (changes) {
-            changes.forEach(file => {
-                console.log(file);
+            changes.forEach(async (file)=> {
                 let patch = processChanges.getDiff(file.route, file.contents)
                 await commit.insertChange();
             })
         }
-        if (addFiles) {
-            addFiles.forEach(element => {
-                console.log(element)
-            });
-        }
+        
         req.status(200).json({
             "status": "sucess",
             "commit_id": id
@@ -62,4 +61,11 @@ app.post('/commit/open', async (req, res) => {
     } else { res.status(400).json({ "status": "failed" }) }
 })
 
-app.get('/status')
+
+app.get('/rollback', async (req, res) => {
+
+})
+
+app.get('/status', async (req, res) => {
+
+})

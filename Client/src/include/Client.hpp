@@ -22,7 +22,7 @@ public:
     int init(std::string& repo_name);
     void get(int files[], std::string specifyCommit, int Time);
     int commit(std::string& message);
-    int rollback();
+    int rollback(std::string route, std::string commit);
     int reset();
     int sync();
 };

@@ -1,6 +1,7 @@
 const compressor = require("./Huffman.js");
 const DB = require("./DataBase.js").DataBase.Instance();
 const md5 = require("md5");
+const processChanges = require("./processChanges.js");
 
 /**
  * Clase para ejecutar los commits de achivos realizados por el usuario
@@ -53,9 +54,12 @@ class Commit{
     /**
      * Inserta los nuevos cambios en la base de datos siempre y cuando el commit este abierto
      */
-    async insertChange(){
+    async insertChange(ruta, newText){
         if(!this.#isOpen){throw "there's no open commit"}
-
+        let oldText = await DB.getFileState(ruta);
+        let change = processChanges.getDiff(ruta, oldText, newText)
+        let sql = `INSERT INTO DIFF (commit_id, archivo, diff_output, md5)
+                    VALUES ("${this.#commitId}",${ruta},"","");`
     }
 
     /**
