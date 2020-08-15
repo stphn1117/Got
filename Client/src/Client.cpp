@@ -4,6 +4,7 @@
 #include <sstream>
 #include <fstream>
 #include "include/utilities.hpp"
+#include "include/Sync.hpp"
 
 using json = nlohmann::json;
 
@@ -132,7 +133,20 @@ int Client::reset(std::string& route)
     output.close();
     return 0;
 }
-int Client::sync()
+int Client::sync(std::string& route)
 {
+    json req = {{"file_route", route}};
+    auto res = cpr::Get(cpr::Url{url + "/sync"}, jsonHeader, cpr::Body{req.dump()});
+    json response = json::parse(res.text);
+    json content = response["content"].get<std::string>();
+    Sync sc;
+    sc.merge(route, content);
     return 0;
+}
+int Client::status(std::string route){
+    if(route!=""){
+        return 0;
+    }else{
+        return 0;
+    }
 }

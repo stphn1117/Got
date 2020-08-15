@@ -7,8 +7,9 @@ INCLUDE(GNUInstallDirs)
 set(DEFAULT_BUILD_TYPE "Release")
 
 set(INC src/include)
-set(SOURCE_FILES src/Client.cpp src/Interface.cpp src/main.cpp)
-set(HEADERS ${INC}/Client.hpp ${INC}/Interface.hpp ${INC}/nlohmannJson.hpp)
+set(SOURCE_FILES src/Client.cpp src/Interface.cpp src/main.cpp src/Sync.cpp)
+set(HEADERS ${INC}/Client.hpp ${INC}/Interface.hpp ${INC}/nlohmannJson.hpp ${INC}/utilities.hpp
+    ${INC}/list.hpp ${INC}/Sync.hpp)
 
 add_executable(got ${SOURCE_FILES} ${HEADERS})
 find_package(cpr CONFIG REQUIRED)

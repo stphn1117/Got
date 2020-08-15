@@ -24,7 +24,8 @@ public:
     int commit(std::string& message);
     int rollback(std::string& route, std::string& commit);
     int reset(std::string& route);
-    int sync();
+    int sync(std::string& route);
+    int status(std::string route="");
 };
 
 #endif

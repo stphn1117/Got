@@ -1,15 +1,14 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-using namespace std;
 /**
  * @brief Clase para la sincronizacion de archivos
  * 
  */
 class Sync{
     public:
-    string finalContent = "";
-    string buffer = "";
-    void merge(string localFilePath, string remoteFile);
-    int askUser(string localFilePath);
+    std::string finalContent = "";
+    std::string buffer = "";
+    void merge(std::string localFilePath, std::string remoteFile);
+    int askUser(std::string localFilePath);
 };
