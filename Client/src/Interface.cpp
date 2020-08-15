@@ -4,7 +4,7 @@
 #include <fstream>
 #include <sys/stat.h>
 #include <dirent.h>
-
+#include <string>
 #include <filesystem>
 
 #include "include/utilities.hpp"
@@ -16,9 +16,14 @@
 //Tareas comprobar lo de json files
 //agreagar directorios raiz
 
+namespace fs = std::filesystem;
+
+
 json metadata;
-nlohmann::json filesAdded;
 json TrackFiles(json filesToTrack);
+
+
+
 
 void Interface::getCommand(int count, char **command){
     if(strcmp(command[1], "help") == 0) {
@@ -34,28 +39,11 @@ void Interface::getCommand(int count, char **command){
 
 
 json TrackFiles(json filesToTrack){
-        DIR *dp;
-        struct dirent *ep;     
-        dp = opendir ("./");
-        if (dp != NULL)
-        {       
-           while (ep = readdir (dp))
-            //puts (ep->d_name);
-                if(strcmp(ep->d_name, "..") == 0){
-                    ce::log("delete dir ..");
-                }else if(strcmp(ep->d_name, ".") == 0){
-                    ce::log("delete dir .");
-                }else{
-                    filesToTrack.push_back(ep->d_name);
-                }
 
-            
-            (void) closedir (dp);
-        }else
-            perror ("Couldn't open the directory");
-        
-        
 
+        std::string path = "./";
+        for (const auto & entry : fs::recursive_directory_iterator(path))
+            filesToTrack.push_back(entry.path());        
 return filesToTrack;
 }
 
@@ -84,35 +72,31 @@ void Interface::createProject(int count, char **command, int id){
         metadataFile << metadata;
         metadataFile.close();
         ce::log(" new project created");
+
+       
+            
         
 }
+
 
 
 void Interface::handleAddFile(char **command){
     FILE *file;
     if(strcmp(command[2], "All") == 0){
 
-    TrackFiles(filesAdded);
-
-    ce::log(TrackFiles(filesAdded));
-
-
+    filesAdded.push_back(TrackFiles(filesAdded));
+    ce::log(filesAdded);
 
     }else{
-
         if(file = fopen(command[2], "r")) {
             fclose(file);
-            filesAdded.push_back(command[2]);
+            Interface::filesAdded.push_back(command[2]);
             ce::log("file added");
-            //testing
-            ce::log(filesAdded);
             
-
         } else {
             ce::log("file doesn't exist");
         }
 
     }
 }
-
 
