@@ -107,14 +107,14 @@ int Client::rollback(std::string& route, std::string& commit)
                 {"commit_id", commit}};
     auto res = cpr::Get(cpr::Url{url + "/rollback"}, jsonHeader, cpr::Body{req.dump()});
     json response = json::parse(res.text);
+    json content = response["content"];
     std::ofstream output;
     output.open(route);
     if (output.is_open())
     {
-        output << response["content"];
+        output << content;
     }
     output.close();
-    return 0;
     return 0;
 }
 int Client::reset()
