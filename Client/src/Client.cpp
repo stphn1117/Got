@@ -27,7 +27,7 @@ json Client::getMetaData()
     std::ifstream ifs("./.metadata.json");
     json metadata;
     ifs >> metadata;
-    return metadata["lastCommit"].get<std::string>();
+    return metadata;
 }
 int Client::overwriteMetaData(json newData){
     std::ofstream output;
