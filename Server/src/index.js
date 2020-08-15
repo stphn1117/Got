@@ -46,22 +46,21 @@ app.post('/commit', async (req, res) => {
     }
     if (id && mensaje && prevCommit) {
         if (commit.is_open()) { throw "unfinished commit in process" }
-        let id = await commit.open(id, prevCommit, mensaje);
+        let commit_id = await commit.open(id, prevCommit, mensaje);
         if (addFiles) {
             addFiles.forEach(file => {
                 commit.insertArchivo(file.route, file.contents)
             });
         }
-        if (changes) {
-            changes.forEach(async (file) => {
-                let patch = processChanges.getDiff(file.route, file.contents)
-                await commit.insertChange();
+        if (changed) {
+            changed.forEach(async (file) => {
+                await commit.insertChange(file.route, file.contents);
             })
         }
 
         req.status(200).json({
             status: "sucess",
-            commit_id: id
+            commit_id: commit_id
         })
     } else { res.status(400).json({ "status": "failed" }) }
 })
@@ -69,14 +68,14 @@ app.post('/commit', async (req, res) => {
 
 app.get('/rollback', async (req, res) => {
     let file = req.body.file_route;
-    let commit = req.body.commit_id;
+    let commit_id = req.body.commit_id;
     let check = await DB.checkFileExists(file);
     if (!check) {
         res.status(400).json({
             status: "failed"
         })
     }
-    let contents = await DB.getFileState(file, commit)
+    let contents = await DB.getFileState(file, commit_id)
     res.json({
         route: file,
         content: contents

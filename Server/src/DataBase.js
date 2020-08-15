@@ -74,7 +74,8 @@ class DataBase {
                     VALUES (${id},${repoId}, ${parentCommit}, ${mensaje}, "${autor}");`;
         let updateHead = `UPDATE REPOSITORIO SET head = "${id}" WHERE id=${repoId}`
         await this.executeQuery(sql);
-        return await this.executeQuery(sql)
+        await this.executeQuery(updateHead);
+        return id;
     }
 
     /**
