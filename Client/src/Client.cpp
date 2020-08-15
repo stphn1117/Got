@@ -62,8 +62,8 @@ int Client::commit(std::string& message)
     json addFiles = metaData["add"];
     json changeFiles = metaData["tracked"];
 
-    json newFileList = new json::array();
-    json changedFileList = new json::array();
+    json newFileList;
+    json changedFileList;
     for (auto file_route : addFiles)
     {
         std::ifstream ifs(file_route.get<std::string>());
