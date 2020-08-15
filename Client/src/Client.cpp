@@ -117,8 +117,19 @@ int Client::rollback(std::string& route, std::string& commit)
     output.close();
     return 0;
 }
-int Client::reset()
+int Client::reset(std::string& route)
 {
+    json req = {{"file_route", route}};
+    auto res = cpr::Get(cpr::Url{url + "/rollback"}, jsonHeader, cpr::Body{req.dump()});
+    json response = json::parse(res.text);
+    json content = response["content"];
+    std::ofstream output;
+    output.open(route);
+    if (output.is_open())
+    {
+        output << content;
+    }
+    output.close();
     return 0;
 }
 int Client::sync()

@@ -23,7 +23,7 @@ public:
     void get(int files[], std::string specifyCommit, int Time);
     int commit(std::string& message);
     int rollback(std::string& route, std::string& commit);
-    int reset();
+    int reset(std::string& route);
     int sync();
 };
 

@@ -39,9 +39,9 @@ app.post('/commit', async (req, res) => {
     let prevCommit = req.body.previous_commit;
     let changed = req.body.add_files;
     let addFiles = req.body.changed_files;
-    if (!commit.checkIfLast(prevCommit)){
+    if (!commit.checkIfLast(prevCommit)) {
         res.status(400).json({
-            status:"outdated"
+            status: "outdated"
         })
     }
     if (id && mensaje && prevCommit) {
@@ -49,16 +49,16 @@ app.post('/commit', async (req, res) => {
         let id = await commit.open(id, prevCommit, mensaje);
         if (addFiles) {
             addFiles.forEach(file => {
-                commit.insertArchivo(file.route,file.contents)
+                commit.insertArchivo(file.route, file.contents)
             });
         }
         if (changes) {
-            changes.forEach(async (file)=> {
+            changes.forEach(async (file) => {
                 let patch = processChanges.getDiff(file.route, file.contents)
                 await commit.insertChange();
             })
         }
-        
+
         req.status(200).json({
             status: "sucess",
             commit_id: id
@@ -71,15 +71,33 @@ app.get('/rollback', async (req, res) => {
     let file = req.body.file_route;
     let commit = req.body.commit_id;
     let check = await DB.checkFileExists(file);
-    if(!check){
+    if (!check) {
         res.status(400).json({
-            status:"failed"
+            status: "failed"
         })
     }
     let contents = await DB.getFileState(file, commit)
-    res.json({route: file,
-            content : contents})
+    res.json({
+        route: file,
+        content: contents
+    })
 })
+app.get('/reset', async (req, res) => {
+    let file = req.body.file_route;
+    let check = await DB.checkFileExists(file);
+    if (!check) {
+        res.status(400).json({
+            status: "failed"
+        })
+    }
+    let contents = await DB.getFileState(file)
+    res.json({
+        route: file,
+        content: contents
+    })
+})
+
+
 
 app.get('/status', async (req, res) => {
 
