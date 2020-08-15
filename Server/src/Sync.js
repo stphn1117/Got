@@ -31,7 +31,7 @@ sino por la multiplicación de los deseos (Platón)
 
 No lastimes a los demás con lo que te causa dolor a ti mismo (Buda)
 `;
-let res = JSON.stringify(processChanges.getDiff("demo", oldText, newText));
-let ss = processChanges.applyDiff(oldText,JSON.parse(res))
-console.log("===============================================")
-console.log(ss)
+let res = processChanges.getDiff("demo", oldText, newText);
+//let ss = processChanges.applyDiff(oldText,JSON.parse(res))
+console.log(res)
+//console.log(ss)
