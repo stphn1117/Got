@@ -142,7 +142,7 @@ class DataBase {
         let finalContent = rawFile.content;
         //esto debería poder retornar el archivo hasta el estado que se solicita
         rawFile.changes.forEach((change)=>{
-            processChanges.applyDiff(finalContent,JSON.parse(change));
+            processChanges.applyDiff(finalContent,JSON.parse(change.diff_output));
         })
         return finalContent;
     }
