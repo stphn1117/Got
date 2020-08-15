@@ -1,7 +1,11 @@
 #include "./include/Sync.hpp"
-#include <sstream>
-using namespace std;
 
+/**
+ * @brief Realiza la comparacion y combinacion de archivos de forma interactiva
+ * 
+ * @param localFilePath Ubicacion del archivo local
+ * @param remoteFileString Archivo remoto en forma de string
+ */
 void Sync::merge(string localFilePath, string remoteFileString)
 {
     ifstream localFile(localFilePath);
@@ -25,12 +29,10 @@ void Sync::merge(string localFilePath, string remoteFileString)
         if (localLine == remoteLine)
         {
             Sync::finalContent += localLine + "\n";
-            cout << "Same: " << localLine << endl;
-            ;
         }
         else
         {
-            cout << "Diff: " << localLine << "\t" << remoteLine << endl;
+            cout << "_______/ Versiones /_______ " << "\nLocal: " << localLine << "\nRemota: " << remoteLine << endl;
             mergeAction = Sync::askUser(localFilePath);
             if (mergeAction == 1)
             { //Conservar local
@@ -56,12 +58,12 @@ void Sync::merge(string localFilePath, string remoteFileString)
 
     if (localFileLineCount > lines)
     {
-        cout << "¿Desea agregar el contenido restante del archivo local?\n1. Si\n2. No" << endl;
+        cout << "\n¿Desea agregar el contenido restante del archivo local?\n1. Si\n2. No" << endl;
         cin >> mergeAction;
 
         if(mergeAction == 1){
-            for(int line = 0; localFileLineCount-lines > line < localFileLineCount && getline(localFile, localLine) ; line++){
-                if(line >= localFileLineCount-lines && line < localFileLineCount ){
+            for(int line = 0; getline(localFile, localLine) ; line++){
+                if(line >= lines && line < localFileLineCount ){
                     finalContent += localLine + "\n";
                 }
             }
@@ -69,12 +71,12 @@ void Sync::merge(string localFilePath, string remoteFileString)
     }
     else if (remoteFileLineCount > lines)
     {
-        cout << "¿Desea agregar el contenido restante del archivo remoto?\n1. Si\n2. No" << endl;
+        cout << "\n¿Desea agregar el contenido restante del archivo remoto?\n1. Si\n2. No" << endl;
         cin >> mergeAction;
 
         if(mergeAction == 1){
             for(int line = 0; getline(remoteFile, remoteLine); line++){
-                if(line >= remoteFileLineCount-lines && line < remoteFileLineCount ){
+                if(line >= lines && line < remoteFileLineCount ){
                     finalContent += remoteLine + "\n";
                 }
             }
@@ -84,12 +86,17 @@ void Sync::merge(string localFilePath, string remoteFileString)
     cout << Sync::finalContent << endl;
 }
 
+/**
+ * @brief Permite al usuario seleccionar una forma de combinar los archivos
+ * 
+ * @param localFilePath Ubicacion del archivo local
+ * @return int Representacion de la modalidad de merge seleccionada
+ */
 int Sync::askUser(string localFilePath)
 {
     int mergeAction;
-    cout << "Seleccione una de las siguientes opciones para el merge del archivo " << localFilePath << endl;
+    cout << "\nSeleccione una de las siguientes opciones para el merge del archivo " << localFilePath << endl;
     cout << "1. Conservar local\n2. Reemplazar local por remoto\n3. Reemplazar local por remoto y guardar local" << endl;
     cin >> mergeAction;
     return mergeAction;
 }
-

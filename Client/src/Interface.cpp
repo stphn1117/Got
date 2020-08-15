@@ -6,7 +6,6 @@
 #include <dirent.h>
 #include <string>
 #include <filesystem>
-
 #include "include/utilities.hpp"
 #include "include/Interface.hpp"
 #include "include/Client.hpp"
@@ -22,9 +21,12 @@ namespace fs = std::filesystem;
 json metadata;
 json TrackFiles(json filesToTrack);
 
-
-
-
+/**
+ * @brief Obtiene el comando ejecutado por el cliente y llama a las respectivas funciones relacionadas
+ * 
+ * @param count 
+ * @param command Comando ingresado por el usuario
+ */
 void Interface::getCommand(int count, char **command){
     if(strcmp(command[1], "help") == 0) {
         ce::debuglog(" instructions:\n\n init <name>\n\n add [-A] [name]\n\n commit <message>\n\n reset <file>\n\n sync<file>\n\n");
@@ -39,9 +41,13 @@ void Interface::getCommand(int count, char **command){
     }
 }
 
-
+/**
+ * @brief Recolecta los archivos de un directorio especifico
+ * 
+ * @param filesToTrack json que contiene los archivos de seguimiento
+ * @return json conjunto de archivos 
+ */
 json TrackFiles(json filesToTrack){
-
 
         std::string path = "./";
         for (const auto & entry : fs::recursive_directory_iterator(path))
@@ -49,10 +55,16 @@ json TrackFiles(json filesToTrack){
 return filesToTrack;
 }
 
-
+/**
+ * @brief Inicializa un nuevo repositorio en el cliente, crea el archivo .gotignore y el archivo que contiene la metadata del proyecto en Got
+ * 
+ * @param count 
+ * @param command Nombre del repositorio 
+ * @param id Identificador del repositorio
+ */
 void Interface::createProject(int count, char **command, int id){
         //create .gotignore
-         std::ofstream file;
+        std::ofstream file;
         std::string gotIgnore = "./.gotignore";
         file.open(gotIgnore);
         file << "gotignore files";
@@ -77,8 +89,11 @@ void Interface::createProject(int count, char **command, int id){
         
 }
 
-
-
+/**
+ * @brief Maneja la funcion de agregar archivos al proyecto
+ * 
+ * @param command Comando ingresado por el usuario
+ */
 void Interface::handleAddFile(char **command){
     FILE *file;
     if(strcmp(command[2], "All") == 0){

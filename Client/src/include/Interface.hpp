@@ -6,6 +6,10 @@
 //got--> init <name>, help, add[-A] [name], commit <message>, 
 //got-->status <file>, rollback <file> <commit>, reset <file>, sync <file>
 
+/**
+ * @brief Clase que maneja la interface por comandos de la aplicacion Got
+ * 
+ */
 class Interface{ 
     
     public:
