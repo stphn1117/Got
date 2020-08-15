@@ -28,7 +28,7 @@ class Commit {
     async open(repoId, parentCommit, mensaje) {
         this.#isOpen = true;
         this.#commitId = md5(`${repoId}::${parentCommit}::${mensaje}::${Date.now()}`)
-        await DB.insertCommit(this.commitId, repoId, parentCommit, mensaje);
+        await DB.insertCommit(this.#commitId, repoId, parentCommit, mensaje);
         return this.#commitId;
     }
 
@@ -62,7 +62,7 @@ class Commit {
             DB.insertDiff(this.#commitId,ruta,change, newText);
         }
     }
-    static async checkIfLast(commit) {
+    async checkIfLast(commit) {
         return await DB.checkIfIsLastCommit(commit);
     }
     /**

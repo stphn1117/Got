@@ -20,6 +20,7 @@ app.post('/init', async (req, res) => {
                 });
             })
             .catch((err) => {
+                console.log(err);
                 res.status(400).json({
                     status: "failed"
                 })
@@ -38,8 +39,8 @@ app.post('/commit', async (req, res) => {
     let id = req.body.repo_id;
     let mensaje = req.body.message;
     let prevCommit = req.body.previous_commit;
-    let changed = req.body.add_files;
-    let addFiles = req.body.changed_files;
+    let addFiles = req.body.add_files;
+    let changed = req.body.changed_files;
     if (!commit.checkIfLast(prevCommit)) {
         res.status(400).json({
             status: "outdated"
@@ -49,17 +50,21 @@ app.post('/commit', async (req, res) => {
         if (commit.is_open()) { throw "unfinished commit in process" }
         let commit_id = await commit.open(id, prevCommit, mensaje);
         if (addFiles) {
-            addFiles.forEach(file => {
-                commit.insertArchivo(file.route, file.contents)
-            });
+            if (addFiles.lenght != 0) {
+                addFiles.forEach(async (file) => {
+                    await commit.insertArchivo(file.route, file.contents)
+                })
+            }
         }
         if (changed) {
-            changed.forEach(async (file) => {
-                await commit.insertChange(file.route, file.contents);
-            })
+            if (changed.lenght != 0) {
+                changed.forEach(async (file) => {
+                    await commit.insertChange(file.route, file.contents);
+                })
+            }
         }
-
-        req.status(200).json({
+        commit.close()
+        res.status(200).json({
             status: "sucess",
             commit_id: commit_id
         })
@@ -119,18 +124,18 @@ cambios desde el server
 app.get('/status', async (req, res) => {
     let tracked = req.body.tracked;
     let commit_id = req.body.commit_id;
-    let changed =[];
-    tracked.forEach(file=>{
-        let srvText = await DB.getFileState(file.route,commit_id);
-        if(srvText != file.contents){
+    let changed = [];
+    tracked.forEach(async (file) => {
+        let srvText = await DB.getFileState(file.route, commit_id);
+        if (srvText != file.contents) {
             changed.push(file.route)
         }
     })
-    if(changed.lenght ==0){
+    if (changed.lenght == 0) {
         res.json({
             status: "no changes"
         })
-    }else{
+    } else {
         res.json({
             status: "changed",
             changes: changed
@@ -144,18 +149,18 @@ app.get('/status/file', async (req, res) => {
     let route = req.body.route;
     let commit_id = req.body.commit_id;
     let check = await DB.checkFileExists(route);
-    if(!content || !route || !check){
-        res.status(400).json({status: "failed"})
+    if (!content || !route || !check) {
+        res.status(400).json({ status: "failed" })
     }
-    let srvText = await DB.getFileState(route,commit_id);
-    let changed="false";
-    if(content!=srvText){
-        let changed="true";
+    let srvText = await DB.getFileState(route, commit_id);
+    let changed = "false";
+    if (content != srvText) {
+        let changed = "true";
     }
     let changesWithFile = await DB.getFileDiffs(route, commit_id)
-    let fileHistory=[]
+    let fileHistory = []
     let changes = changesWithFile.changes;
-    changes.forEach(field=>{
+    changes.forEach(field => {
         diffres = JSON.parse(field.diff_output);
         let cambio = `Cambio: ${field.commit_id}::${diffres.line}::${diffres.operation}\nChange::${diffres.content}`
         fileHistory.push(cambio)
@@ -163,7 +168,7 @@ app.get('/status/file', async (req, res) => {
     })
     res.json({
         status: "success",
-        isChanged:"true",
+        isChanged: "true",
         history: fileHistory
     })
 

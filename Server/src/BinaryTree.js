@@ -215,6 +215,8 @@ class Tree {
      * @param {string} output - Codigo del caracter
      */
     saveCode(char, output) {
+        if(char=="\""){char="dq"}
+        if(char=="\n"){char="jump"}
         var exist = false;
         for (var i in this.charCodes["codes"]) {
             if (this.charCodes["codes"][i]["char"] == char) {

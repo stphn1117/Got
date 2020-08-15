@@ -20,7 +20,7 @@ class DataBase {
      */
     constructor() {
         if (DataBase.inst) { throw "too many instances" }
-        this.#encoder= new compressor.Huffman();
+        this.#encoder = new compressor.Huffman();
         DataBase.inst = true;
         this.mysql = {
             host: 'localhost',
@@ -45,7 +45,7 @@ class DataBase {
      * Ejecuta las consultas realizadas a la base de datos
      * @param {query} query - Solicitud para la base de datos
      */
-    async executeQuery(query) {
+    async executeQuery(query, printer = false) {
         const conn = await mysql2.createConnection(this.mysql)
         const [result] = await conn.execute(query);
         conn.end();
@@ -71,10 +71,10 @@ class DataBase {
      */
     async insertCommit(id, repoId, parentCommit, mensaje, autor = "") {
         let sql = `INSERT INTO COMMITS (id, rep_id, parent_commit, mensaje, autor)
-                    VALUES (${id},${repoId}, ${parentCommit}, ${mensaje}, "${autor}");`;
+                    VALUES ('${id}',${repoId}, '${parentCommit}', '${mensaje}', "${autor}");`;
         let updateHead = `UPDATE REPOSITORIO SET head = "${id}" WHERE id=${repoId}`
-        await this.executeQuery(sql);
-        await this.executeQuery(updateHead);
+        this.executeQuery(sql);
+        this.executeQuery(updateHead);
         return id;
     }
 
@@ -86,13 +86,14 @@ class DataBase {
      * @param {string} huffman_table - Tabla de codigos de Huffman de los caracteres en el archivo
      */
     async insertArchivo(ruta, commit, huffman_code, huffman_table) {
+        console.log(commit)
         let sql = `INSERT INTO ARCHIVO (ruta, commit_id, huffman_code, huffman_table)
-                    values ("${ruta}", ${commit}, "${huffman_code}", "${huffman_table}")`
+                    values ('${ruta}', '${commit}', '${huffman_code}', '${huffman_table}')`
         return await this.executeQuery(sql);
     }
     async insertDiff(commit, ruta, change, newText) {
         let sql = `INSERT INTO DIFF (commit_id, archivo, diff_output, md5)
-                    VALUES ("${commit}",${ruta},"${change}","${md5(newText)}")`
+                    VALUES ("${commit}","${ruta}",'${change}','${md5(newText)}')`
         return await this.executeQuery(sql);
     }
 
@@ -101,8 +102,14 @@ class DataBase {
      * @param {string} ruta - Ruta del archivo que se busca en la base de datos
      */
     async getFile(ruta) {
+        //console.log("===============================================")
         let sql = `SELECT * FROM ARCHIVO where ruta="${ruta}"`;
+        let st = await this.executeQuery(sql)
+        //console.log(st)
+        //console.log(st[0])
         let [file] = await this.executeQuery(sql);
+        //console.log(file);
+        //console.log("===============================================")
         return file;
     }
 
@@ -113,12 +120,14 @@ class DataBase {
      */
     async getFileDiffs(ruta, commit = null) {
         let file = await this.getFile(ruta);
+        console.log(file)
         let sql = `SELECT * FROM DIFF WHERE archivo ='${file.id}' ORDER BY id`;
         let diffs = await this.executeQuery(sql)
-        
-        let returnVal={
-            content: this.#encoder.decompress(file.huffman_code, file.huffman_table),
-            changes:[]
+        let contents =  ""; //this.#encoder.decompress(file.huffman_code, file.huffman_table)
+        console.log(JSON.parse(file.huffman_table))
+        let returnVal = {
+            content: contents,
+            changes: []
         };
         if (!commit) {
             returnVal.changes = diffs;
@@ -137,35 +146,35 @@ class DataBase {
         }
         return returnVal;
     }
-    async getFileState(ruta, commit=null){
+    async getFileState(ruta, commit = null) {
         let rawFile = await this.getFileDiffs(ruta, commit);
         let finalContent = rawFile.content;
         //esto debería poder retornar el archivo hasta el estado que se solicita
-        rawFile.changes.forEach((change)=>{
-            processChanges.applyDiff(finalContent,JSON.parse(change.diff_output));
+        rawFile.changes.forEach((change) => {
+            processChanges.applyDiff(finalContent, JSON.parse(change.diff_output));
         })
         return finalContent;
     }
-    async checkFileExists(ruta){
+    async checkFileExists(ruta) {
         let sql = `SELECT * FROM ARCHIVOS WHERE ruta='${ruta}'`
-        let val = []; 
+        let val = [];
         val = await this.executeQuery(sql);
-        if(val.length == 0){
+        if (val.length == 0) {
             console.log("file does not exists")
             return false;
-        }else{
+        } else {
             console.log("file exists")
             return true;
         }
     }
-    async checkIfIsLastCommit(commit){
+    async checkIfIsLastCommit(commit) {
         let sql = `SELECT * FROM COMMITS WHERE parent_commit='${commit}'`
-        let val = []; 
+        let val = [];
         val = await this.executeQuery(sql);
-        if(val.length == 0){
+        if (val.length == 0) {
             console.log("is last commit")
             return true;
-        }else{
+        } else {
             console.log("is not last commit")
             return false;
         }
