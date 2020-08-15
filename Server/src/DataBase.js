@@ -67,8 +67,10 @@ class DataBase {
      */
     async insertCommit(id, repoId, parentCommit, mensaje, autor = "") {
         let sql = `INSERT INTO COMMITS (id, rep_id, parent_commit, mensaje, autor)
-        VALUES (${id},${repoId}, ${parentCommit}, ${mensaje}, "${autor}");`;
-        return this.executeQuery(sql)
+                    VALUES (${id},${repoId}, ${parentCommit}, ${mensaje}, "${autor}");`;
+        let updateHead = `UPDATE REPOSITORIO SET head = "${id}" WHERE id=${repoId}`
+        await this.executeQuery(sql);
+        return await this.executeQuery(sql)
     }
 
     /**
@@ -90,12 +92,42 @@ class DataBase {
      */
     async getFile(ruta) {
         let sql = `SELECT * FROM ARCHIVO where ruta="${ruta}"`;
-        let [file] =  await this.executeQuery(sql);
+        let [file] = await this.executeQuery(sql);
         return file;
     }
 
-    async test2() {
-        return await this.executeQuery("SHOW TABLES")
+    /**
+     * Obtiene los diffs del archivo especificado
+     * @param {string} ruta ruta del archivo en el cliente 
+     * @param {string} commit id del commit hasta el cual se quiere recuperar el archivo
+     */
+    async getDiffs(ruta, commit = null) {
+        let file = await this.getFile(ruta);
+        let sql = `SELECT * FROM DIFF WHERE archivo ='${file.id}' ORDER BY id`;
+        let diffs = await this.executeQuery(sql)
+        let returnVal;
+        if (!commit) {
+            returnVal = diffs;
+        } else {
+            let toApply = []
+            let endfor = false;
+            diffs.forEach(element => {
+                if (!endfor) {
+                    if (element.commit_id == commit) {
+                        endfor = true;
+                    }
+                    toApply.push(element);
+                }
+            });
+            returnVal = toApply
+        }
+        return returnVal;
     }
 }
 module.exports.DataBase = DataBase;
+
+let a = DataBase.Instance();
+async function test() {
+    let f = await a.getDiffs("test.js")
+}
+test()
