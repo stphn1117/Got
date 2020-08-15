@@ -86,7 +86,8 @@ int Client::commit(std::string& message)
 
     json commitJson = {{"repo_id", metaData["id"].get<int>()},
                        {"message", message},
-                       {"previous_commit", metaData["lastCommitId"].get<std::string>()}.{"add_files", newFileList},
+                       {"previous_commit", metaData["lastCommitId"].get<std::string>()},
+                       {"add_files", newFileList},
                        {"changed_files", changedFileList}};
 
     //cpr post
@@ -98,18 +99,20 @@ int Client::commit(std::string& message)
 }
 
 int Client::rollback(std::string route, std::string commit)
+{
     json req = {
         {"file_route", route},
         {"commitid", commit},
-    }
-    auto res = cpr::Post(cpr::Url{url + "/rollback"}, jsonHeader, cpr::Body{commitJson.dump()});
+    };
+    auto res = cpr::Post(cpr::Url{url + "/rollback"}, jsonHeader, cpr::Body{req.dump()});
     json response = json::parse(res.text);
-
-{
+    return 0;
 }
 int Client::reset()
 {
+    return 0;
 }
 int Client::sync()
 {
+    return 0;
 }

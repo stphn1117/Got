@@ -42,7 +42,11 @@ app.post('/commit', async (req, res) => {
     if (id && mensaje && prevCommit) {
         if (commit.is_open()) { throw "unfinished commit in process" }
         let id = await commit.open(id, prevCommit, mensaje);
-        // needs review
+        if (addFiles) {
+            addFiles.forEach(element => {
+                commit.insertArchivo(element.ruta)
+            });
+        }
         if (changes) {
             changes.forEach(file => {
                 console.log(file);
@@ -50,11 +54,7 @@ app.post('/commit', async (req, res) => {
                 await commit.insertChange();
             })
         }
-        if (addFiles) {
-            addFiles.forEach(element => {
-                console.log(element)
-            });
-        }
+        
         req.status(200).json({
             "status": "sucess",
             "commit_id": id

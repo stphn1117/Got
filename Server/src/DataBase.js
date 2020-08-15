@@ -125,9 +125,10 @@ class DataBase {
     }
 }
 module.exports.DataBase = DataBase;
-
+/*
 let a = DataBase.Instance();
 async function test() {
     let f = await a.getDiffs("test.js")
 }
 test()
+*/
